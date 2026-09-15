@@ -1,0 +1,15 @@
+# File temporanei di Office
+~$*
+
+# Python
+__pycache__/
+*.pyc
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Log di rasterizzazione/debug
+chrome_err.txt

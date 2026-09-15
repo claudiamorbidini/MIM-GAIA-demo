@@ -1,0 +1,2538 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G.A.I.A. demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,400;0,600;0,700;0,900;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gov:#12235c;            /* barra governo navy */
+  --unica:#2c5ad0;          /* blu header UNICA */
+  --unica-dark:#234ab0;
+  --unica-hero:#3160d6;
+  --ink:#1a2b4a;
+  --muted:#5a6675;
+  --line:#e3e8f0;
+  --bg:#eef2f8;
+  --white:#fff;
+  /* ambiti */
+  --amm:#2c5ad0;
+  --prev:#e08a00;
+  --did:#0b9b77;
+  --incl:#7b4fd3;
+  --orient:#e3553b;
+  --gest:#0f7c8c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Titillium Web','Segoe UI',Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.5}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+
+/* ===== Barra governo ===== */
+.govbar{background:var(--gov);color:#fff;font-size:13px}
+.govbar-inner{max-width:1280px;margin:0 auto;padding:8px 24px;display:flex;align-items:center;gap:10px}
+.gov-emblem{height:28px;width:auto;flex:0 0 auto;display:block}
+.govbar .min{font-weight:600;letter-spacing:.2px}
+.govbar .spacer{flex:1}
+.govbar .gov-link{opacity:.9;display:inline-flex;align-items:center;gap:6px;padding:0 10px;font-weight:600}
+.govbar .gov-link+.gov-link{border-left:1px solid rgba(255,255,255,.25)}
+
+/* ===== Header UNICA ===== */
+.header{background:var(--unica);color:#fff;position:sticky;top:0;z-index:40;box-shadow:0 2px 10px rgba(18,35,92,.18)}
+.header-inner{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:64px;gap:30px}
+.logo{display:flex;align-items:center}
+.logo-img{height:40px;display:block}
+.nav{display:flex;align-items:center;gap:26px;height:100%}
+.nav-item{display:flex;align-items:center;gap:7px;font-weight:600;font-size:15px;height:100%;color:#fff;opacity:.92;position:relative;background:none;border:none}
+.nav-item .caret{font-size:10px;opacity:.8}
+.nav-item.disabled{cursor:default}
+.nav-item.disabled:hover{opacity:.6}
+.nav-item.gaia{opacity:1;font-weight:700}
+.nav-item.gaia .badge{background:#ffd23f;color:#12235c;font-size:9px;font-weight:800;padding:2px 6px;border-radius:10px;letter-spacing:.4px;text-transform:uppercase}
+.nav-item.active::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:#ffd23f;border-radius:3px 3px 0 0}
+.nav-item.gaia:hover{transform:translateY(-1px)}
+.header .spacer{flex:1}
+
+/* ===== HOME (hero) ===== */
+.hero{background:linear-gradient(120deg,var(--unica) 0%,var(--unica-hero) 100%);color:#fff;position:relative;overflow:hidden}
+.hero-inner{max-width:1280px;margin:0 auto;padding:60px 24px 84px;position:relative;z-index:2;min-height:460px}
+.hero-title{width:min(400px,66vw);height:auto;display:block;margin-bottom:22px;filter:drop-shadow(0 3px 10px rgba(0,0,0,.14))}
+.hero .lead{font-size:24px;font-weight:700;max-width:480px}
+.hero-people{position:absolute;right:8px;bottom:0;height:100%;max-height:540px;width:auto;z-index:1;pointer-events:none}
+.hero .callout{margin-top:26px;background:#fff;color:var(--ink);border-radius:12px;padding:22px 24px;max-width:520px;font-size:16px;box-shadow:0 18px 40px rgba(18,35,92,.25)}
+.hero .callout b{color:var(--ink)}
+.hero-note{max-width:1280px;margin:0 auto;padding:0 24px}
+.demo-banner{max-width:1280px;margin:-46px auto 0;padding:0 24px;position:relative;z-index:5}
+.demo-banner-inner{background:#fff;border:1px solid var(--line);border-left:5px solid var(--unica);border-radius:12px;padding:20px 24px;box-shadow:0 10px 30px rgba(18,35,92,.10);display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.demo-banner .txt{flex:1;min-width:260px}
+.demo-banner h3{font-size:19px;color:var(--gov)}
+.demo-banner p{color:var(--muted);font-size:15px;margin-top:4px}
+.btn-primary{background:var(--unica);color:#fff;border:none;border-radius:8px;padding:13px 22px;font-weight:700;font-size:15px;display:inline-flex;align-items:center;gap:9px;transition:.15s}
+.btn-primary:hover{background:var(--unica-dark);transform:translateY(-1px)}
+.features{max-width:1280px;margin:46px auto;padding:0 24px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.feature{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px}
+.feature .ic{width:42px;height:42px;border-radius:10px;background:#eaf0fc;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:12px}
+.feature h4{font-size:17px;color:var(--gov)}
+.feature p{color:var(--muted);font-size:14px;margin-top:6px}
+
+/* ===== G.A.I.A. view ===== */
+.gaia-view{display:none}
+.gaia-view.show{display:block}
+.home-view.hide{display:none}
+
+/* ===== Schermata introduttiva G.A.I.A. ===== */
+.gaia-intro{display:none}
+.gaia-intro.show{display:block}
+.intro-hero{background:radial-gradient(1100px 460px at 50% -12%, #2f5bd0 0%, #16307a 58%, #0e2150 100%);color:#fff;text-align:center;padding:66px 24px 74px}
+.intro-hero-inner{max-width:820px;margin:0 auto}
+.gaia-logo{display:inline-flex;align-items:center;gap:16px}
+.gaia-logo-mark{width:70px;height:70px;border-radius:22px;background:linear-gradient(140deg,#5ff0cb 0%,#40a9ff 55%,#3d6bff 100%);display:flex;align-items:center;justify-content:center;box-shadow:inset 0 2px 6px rgba(255,255,255,.4), 0 14px 32px rgba(23,48,122,.4)}
+.gaia-logo-word{font-size:56px;font-weight:900;letter-spacing:2px;color:#fff;line-height:1}
+.gaia-logo-tag{font-size:16px;font-weight:600;opacity:.92;margin-top:12px;letter-spacing:.4px}
+.intro-claim{font-size:18px;line-height:1.6;opacity:.95;margin:22px auto 0;max-width:690px}
+.intro-cta{margin-top:30px;display:inline-flex;align-items:center;gap:10px;background:#fff;color:#16307a;font-weight:800;font-size:17px;border:none;padding:15px 30px;border-radius:30px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.28);transition:.15s}
+.intro-cta:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,0,0,.36);background:#eef2fd}
+.intro-cta-note{font-size:12.5px;opacity:.82;margin-top:13px}
+/* menu Accedi (govbar) */
+.gov-login{position:relative;display:inline-block}
+.login-toggle{background:none;border:none;cursor:pointer;font:inherit;color:#fff}
+.login-menu{position:absolute;right:0;top:calc(100% + 8px);background:#fff;border:1px solid #e2e6ef;border-radius:12px;box-shadow:0 16px 40px rgba(16,32,74,.18);padding:8px;min-width:262px;display:none;z-index:400}
+.login-menu.open{display:block}
+.login-menu-h{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:#6a7590;padding:8px 10px 8px}
+.login-menu button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;padding:10px 10px;border-radius:8px;cursor:pointer;font:inherit;font-size:13.5px;color:#1e2a4a;font-weight:600}
+.login-menu button:hover{background:#eef2fd;color:#16307a}
+.login-sep{height:1px;background:#e7ebf3;margin:6px 4px}
+.login-exit{color:#c0392b !important}
+.login-exit:hover{background:#fdecea !important;color:#a5281b !important}
+
+/* area accesso nell'intro */
+.intro-access{margin-top:30px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.intro-access-hint{font-size:15px;line-height:1.5;opacity:.95;background:rgba(255,255,255,.10);border:1px dashed rgba(255,255,255,.4);padding:14px 22px;border-radius:14px;max-width:560px}
+.intro-access-desc{font-size:13.5px;line-height:1.55;opacity:.9;max-width:600px;margin-top:2px}
+.profile-chip{display:inline-flex;align-items:center;margin-left:10px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.32);padding:2px 11px;border-radius:20px;font-size:11.5px;font-weight:700;vertical-align:middle}
+.profile-ctx{max-width:1180px;margin:10px auto 0;font-size:13px;opacity:.92;display:flex;align-items:center;gap:8px}
+.profile-ctx .pc-ic{opacity:.9}
+.intro-body{max-width:1080px;margin:0 auto;padding:56px 24px 74px}
+.intro-h2{font-size:28px;font-weight:900;color:var(--ink);text-align:center;margin-bottom:14px}
+.intro-lead{font-size:16px;line-height:1.7;color:#333c52;max-width:840px;margin:0 auto 42px;text-align:center}
+.intro-lead b{color:var(--ink)}
+.intro-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:48px}
+.intro-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px 22px;box-shadow:0 4px 16px rgba(18,35,92,.05)}
+.intro-card .ic{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:14px}
+.intro-card h4{font-size:17px;font-weight:800;color:var(--ink);margin-bottom:8px}
+.intro-card p{font-size:14px;line-height:1.6;color:var(--muted)}
+.intro-how{background:#f6f8fc;border:1px solid var(--line);border-radius:16px;padding:32px 30px}
+.intro-how h3{font-size:20px;font-weight:800;color:var(--ink);text-align:center;margin-bottom:26px}
+.intro-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.intro-step{text-align:center}
+.intro-step .num{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#3d8bff,#16307a);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:17px}
+.intro-step p{font-size:13.5px;line-height:1.5;color:#333c52}
+.intro-source{text-align:center;font-size:12.5px;color:var(--muted);margin-top:34px}
+.intro-source a{color:var(--unica);text-decoration:none}
+@media(max-width:820px){.intro-cards{grid-template-columns:1fr}.intro-steps{grid-template-columns:repeat(2,1fr)}.gaia-logo-word{font-size:44px}.gaia-logo-mark{width:56px;height:56px}}
+
+.gaia-top{background:linear-gradient(120deg,#0f2f6b 0%,#234ab0 100%);color:#fff}
+.gaia-top-inner{max-width:1280px;margin:0 auto;padding:20px 24px 22px}
+.breadcrumb{font-size:13px;opacity:.85;margin-bottom:12px}
+.breadcrumb b{opacity:1}
+.gaia-title-row{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.gaia-brand{font-size:34px;font-weight:900;letter-spacing:1px}
+.gaia-sub{font-size:16px;opacity:.9;padding-bottom:5px}
+.school-bar{max-width:1280px;margin:0 auto;padding:0 24px;position:relative;top:-18px}
+/* Casella segnalazioni (Dirigente) */
+.inbox-bar{max-width:1280px;margin:0 auto;padding:0 24px;position:relative;top:-6px}
+.inbox-card{width:100%;display:flex;align-items:center;gap:14px;background:linear-gradient(120deg,#ffffff,#f4f8ff);border:1px solid #d3ddf7;border-radius:12px;padding:12px 18px;cursor:pointer;transition:.15s;text-align:left}
+.inbox-card:hover{box-shadow:0 10px 26px rgba(18,35,92,.12);transform:translateY(-1px)}
+.inbox-ic{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:#eaf0fc;font-size:20px;flex:none}
+.inbox-txt{display:flex;flex-direction:column;flex:1;min-width:0}
+.inbox-title{font-weight:800;color:var(--gov);font-size:15px}
+.inbox-sub{font-size:12.5px;color:var(--muted)}
+.inbox-count{background:#e3553b;color:#fff;font-weight:800;font-size:13px;min-width:26px;height:26px;border-radius:20px;display:grid;place-items:center;padding:0 8px;flex:none}
+.inbox-count.zero{background:#c7cfdd}
+.inbox-item{display:flex;align-items:flex-start;gap:12px;padding:15px 0;border-bottom:1px solid var(--line)}
+.inbox-item:last-child{border-bottom:none}
+.ii-dot{width:10px;height:10px;border-radius:50%;margin-top:6px;flex:none}
+.ii-main{flex:1;min-width:0}
+.ii-name{font-weight:800;color:var(--ink);font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ii-cat{font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px}
+.ii-from{font-size:12.5px;color:var(--muted);margin-top:3px}
+.ii-note{font-size:13px;color:#2a3550;font-style:italic;margin-top:5px}
+.ii-actions{display:flex;flex-direction:column;align-items:flex-end;gap:7px;flex:none}
+.ii-price{font-weight:900;color:var(--gov);font-size:15px}
+.ii-price small{font-size:11px;font-weight:600;color:var(--muted)}
+.btn-add.in{background:var(--unica);color:#fff}
+.ii-active{font-size:12px;font-weight:700;color:#0b7a5b;background:#e7f7f1;border:1px solid #bfe8d8;padding:4px 10px;border-radius:20px}
+.ii-x{border:none;background:transparent;color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;text-decoration:underline}
+.ii-x:hover{color:var(--ink)}
+.ii-restore{border:1px solid #c9d7f5;background:#eef3fd;color:var(--gov);font-size:12.5px;font-weight:800;cursor:pointer;border-radius:8px;padding:6px 12px}
+.ii-restore:hover{background:#e2ebfc}
+.inbox-empty{color:var(--muted);font-size:14px;padding:10px 0}
+.inbox-tabs{display:flex;gap:8px;margin:2px 0 16px}
+.ibtab{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 14px;font-weight:700;font-size:13px;color:var(--muted);cursor:pointer;transition:.15s}
+.ibtab:hover{background:#f4f7fd}
+.ibtab.on{background:var(--gov);border-color:var(--gov);color:#fff}
+.ibtab .ibn{font-weight:900;margin-left:2px}
+.ii-arch-when{font-size:11.5px;color:var(--muted);margin-top:3px}
+/* Banner Istituto (Studente / Genitore) */
+.inst-banner{max-width:1280px;margin:0 auto;padding:0 24px;position:relative;top:-18px}
+.inst-inner{background:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(18,35,92,.12);padding:16px 22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;border:1px solid var(--line)}
+.inst-emblem{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:#eef2fb;font-size:24px}
+.inst-name{font-weight:800;font-size:17px;color:var(--gov)}
+.inst-sub{font-size:12.5px;color:var(--muted);font-weight:600}
+.inst-link{margin-left:auto;display:inline-flex;align-items:center;gap:6px;background:#eaf0fc;color:var(--unica);font-weight:700;font-size:13px;padding:9px 16px;border-radius:20px;text-decoration:none}
+.inst-link:hover{background:#dbe6fb}
+/* Switch di vista (Docente / ATA): Catalogo ↔ I miei strumenti */
+.view-switch{display:flex;gap:6px;background:#eef2f8;border:1px solid var(--line);border-radius:12px;padding:5px;margin:18px 0 6px;width:fit-content}
+.vs-btn{border:none;background:transparent;border-radius:9px;padding:9px 16px;font-size:13.5px;font-weight:700;color:var(--muted);cursor:pointer;transition:.14s;display:inline-flex;align-items:center;gap:7px}
+.vs-btn:hover{color:var(--ink)}
+.vs-btn.active{background:#fff;color:var(--unica);box-shadow:0 2px 8px rgba(18,35,92,.1)}
+.vs-btn.vs-inbox{margin-left:6px;border-left:1px solid #d7deea;border-radius:9px}
+.vs-badge{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;border-radius:20px;background:#e3553b;color:#fff;font-size:11.5px;font-weight:800;margin-left:4px;vertical-align:middle}
+.vs-badge.zero{background:#c7cfdd}
+/* Intro vista Studente / Genitore + I miei strumenti */
+.view-intro{margin:2px 0 14px}
+.view-intro h2{font-size:21px;font-weight:800;color:var(--gov);margin:0 0 4px}
+.view-intro p{font-size:14px;color:var(--muted);max-width:780px;line-height:1.5}
+.school-card{background:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(18,35,92,.12);padding:16px 22px;display:flex;align-items:center;gap:26px;flex-wrap:wrap;border:1px solid var(--line)}
+.school-card .school-name{font-weight:800;font-size:17px;color:var(--gov)}
+.school-metric{display:flex;flex-direction:column}
+.school-metric .k{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;font-weight:600}
+.school-metric .v{font-size:18px;font-weight:800;color:var(--ink)}
+.school-metric.budget .v{color:#0b9b77}
+.school-sep{width:1px;align-self:stretch;background:var(--line)}
+.school-maturity{margin-left:auto;background:#eaf0fc;color:var(--unica);font-weight:700;font-size:13px;padding:8px 14px;border-radius:20px}
+
+.gaia-body{max-width:1280px;margin:0 auto;padding:6px 24px 150px}
+
+/* toolbar filtri */
+.toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:18px 0 6px}
+.search{flex:1;min-width:240px;position:relative}
+.search input{width:100%;padding:12px 14px 12px 40px;border:1px solid var(--line);border-radius:10px;font-size:15px;font-family:inherit;background:#fff}
+.search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);opacity:.5}
+.select{padding:11px 14px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:14px;font-family:inherit;font-weight:600;color:var(--ink)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:20px;padding:7px 15px;font-size:13.5px;font-weight:600;color:var(--muted);transition:.12s}
+.chip:hover{border-color:var(--unica);color:var(--unica)}
+.chip.active{background:var(--gov);border-color:var(--gov);color:#fff}
+.chip .dotc{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.result-count{color:var(--muted);font-size:14px;margin:10px 2px}
+
+/* grid */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:0;overflow:hidden;display:flex;flex-direction:column;transition:.15s;position:relative}
+.card:hover{box-shadow:0 14px 34px rgba(18,35,92,.12);transform:translateY(-2px)}
+.card.selected{border-color:var(--unica);box-shadow:0 0 0 2px var(--unica) inset}
+.card-top{height:5px}
+.card-inner{padding:16px 18px 18px;display:flex;flex-direction:column;flex:1}
+.card-cat{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;width:fit-content;padding:3px 9px;border-radius:6px}
+.card h3{font-size:17px;color:var(--gov);line-height:1.2;margin-bottom:6px}
+.card .desc{font-size:13.5px;color:var(--muted);flex:1;margin-bottom:12px}
+.card .meta{display:flex;flex-wrap:wrap;gap:10px 14px;font-size:12px;color:var(--muted);margin-bottom:10px}
+.card .meta b{color:var(--ink)}
+.stars{color:#f5a623;letter-spacing:1px}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.badge-ok{font-size:11px;font-weight:700;color:var(--did);background:#e7f7f1;padding:3px 8px;border-radius:6px}
+.seal{font-size:11px;font-weight:800;color:#0b7a5b;background:#e7f7f1;border:1px solid #bfe8d8;padding:3px 9px;border-radius:6px;cursor:help}
+.risk{font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px;cursor:help}
+.risk-minimo{color:#0b7a5b;background:#eefaf5;border:1px solid #cdeee1}
+.risk-limitato{color:#234ab0;background:#eef2fd;border:1px solid #d3ddf7}
+.risk-alto{color:#a86500;background:#fff4e0;border:1px solid #f4dca8}
+.catalog-note{display:flex;align-items:flex-start;gap:9px;background:#f5f7fb;border:1px solid var(--line);border-radius:10px;padding:11px 15px;font-size:13px;color:var(--muted);margin:8px 0 16px;line-height:1.45}
+.catalog-note b{color:var(--ink)}
+.catalog-note .rk{font-weight:700;padding:1px 7px;border-radius:5px;font-size:11.5px}
+.card{cursor:pointer}
+.school-metric .v.free{color:#0b9b77}
+.card-more{font-size:12.5px;font-weight:700;color:#2c5ad0;margin-bottom:12px;transition:.15s}
+.card:hover .card-more{transform:translateX(3px)}
+
+/* ===== Modale deep dive ===== */
+.modal-overlay{position:fixed;inset:0;background:rgba(12,20,45,.55);backdrop-filter:blur(2px);display:none;align-items:flex-start;justify-content:center;z-index:200;padding:40px 16px;overflow-y:auto}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:16px;max-width:740px;width:100%;box-shadow:0 30px 80px rgba(12,20,45,.35);position:relative;animation:pop .18s ease}
+@keyframes pop{from{transform:translateY(12px);opacity:0}to{transform:none;opacity:1}}
+.modal-x{position:absolute;top:14px;right:14px;width:34px;height:34px;border:none;background:#f0f3f9;border-radius:50%;font-size:22px;line-height:1;color:var(--muted);cursor:pointer;z-index:2}
+.modal-x:hover{background:#e3e8f2;color:var(--ink)}
+.md-top{height:7px;border-radius:16px 16px 0 0}
+.md-pad{padding:24px 30px 28px}
+.md-tags{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.md-title{font-size:24px;font-weight:800;color:var(--ink);margin:0 0 12px;line-height:1.2;max-width:92%}
+.md-desc{font-size:15px;line-height:1.6;color:#2a3550;margin-bottom:20px}
+.md-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px}
+.md-kpi{background:#f6f8fc;border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+.md-kpi .kk{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.md-kpi .kv{font-size:18px;font-weight:800;color:var(--ink);margin-top:3px}
+.md-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:26px;margin-bottom:20px}
+.md-sec{margin-bottom:16px}
+.md-sec h4{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:0 0 8px;font-weight:800}
+.md-list{margin:0;padding:0;list-style:none}
+.md-list li{position:relative;padding:5px 0 5px 24px;font-size:14px;color:#2a3550;line-height:1.45}
+.md-list li::before{content:'✓';position:absolute;left:0;top:5px;color:#0b9b77;font-weight:800}
+.md-ben{font-size:15px;font-weight:700;color:#0b7a5b}
+.md-plain{font-size:14px;color:#2a3550}
+.md-chips{display:flex;gap:7px;flex-wrap:wrap}
+.md-chip{font-size:12px;background:#eef2f8;border:1px solid var(--line);border-radius:20px;padding:4px 11px;color:#2a3550}
+.md-gov{border-left:4px solid;padding:12px 15px;border-radius:0 8px 8px 0;font-size:13.5px;line-height:1.55;color:#2a3550;margin-bottom:8px}
+.md-gov.risk-minimo{border-color:#0b7a5b;background:#eefaf5}
+.md-gov.risk-limitato{border-color:#234ab0;background:#eef2fd}
+.md-gov.risk-alto{border-color:#a86500;background:#fff4e0}
+.md-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;border-top:1px solid var(--line);padding-top:18px;margin-top:6px}
+.md-price{font-size:24px;font-weight:800;color:var(--ink)}
+.md-price small{font-size:13px;color:var(--muted);font-weight:600}
+.md-forn{font-size:12px;color:var(--muted);margin-top:2px}
+.btn-add-lg{border:none;background:#2c5ad0;color:#fff;font-weight:700;font-size:15px;padding:12px 22px;border-radius:10px;cursor:pointer;transition:.15s}
+.btn-add-lg:hover{background:#2247a8}
+.btn-add-lg.on{background:#0b9b77}
+.btn-add-lg.on:hover{background:#0a7d5f}
+@media(max-width:620px){.md-grid{grid-template-columns:1fr;gap:6px}.md-kpis{grid-template-columns:repeat(2,1fr)}.md-pad{padding:20px 18px 22px}}
+
+/* ===== Anteprima PDF ===== */
+.pdf-overlay{position:fixed;inset:0;background:rgba(12,20,45,.6);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;z-index:300;padding:24px}
+.pdf-overlay.show{display:flex}
+.pdf-modal{background:#fff;border-radius:14px;width:min(980px,100%);height:min(90vh,100%);display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(12,20,45,.4);overflow:hidden;animation:pop .18s ease}
+.pdf-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:#f6f8fc;flex-wrap:wrap}
+.pdf-title{font-weight:800;color:var(--ink);font-size:14px}
+.pdf-actions{display:flex;align-items:center;gap:8px}
+.pdf-btn{border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:700;font-size:13px;padding:8px 14px;border-radius:8px;cursor:pointer;transition:.15s}
+.pdf-btn:hover{background:#eef2f8}
+.pdf-btn.primary{background:#2c5ad0;color:#fff;border-color:#2c5ad0}
+.pdf-btn.primary:hover{background:#2247a8}
+.pdf-x{width:32px;height:32px;border:none;background:#eef2f8;border-radius:8px;font-size:20px;line-height:1;cursor:pointer;color:var(--muted)}
+.pdf-x:hover{background:#e0e5ef;color:var(--ink)}
+.pdf-frame{flex:1;border:none;width:100%;background:#525659}
+.card-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto}
+.price{font-size:20px;font-weight:900;color:var(--gov)}
+.price small{font-size:12px;font-weight:600;color:var(--muted)}
+.btn-add{border:1.5px solid var(--unica);color:var(--unica);background:#fff;border-radius:8px;padding:9px 14px;font-weight:700;font-size:13.5px;white-space:nowrap;transition:.12s}
+.btn-add:hover{background:#eaf0fc}
+.card.selected .btn-add{background:var(--unica);color:#fff}
+
+/* ===== Vista Docente: card, flag e strumenti ===== */
+.card.flagged{border-color:#f0c37a;box-shadow:0 0 0 2px #f6dcae inset,0 8px 24px rgba(224,138,0,.12)}
+.card-footer.col{flex-direction:column;align-items:stretch;gap:8px}
+.btn-tool{border:none;background:#0b9b77;color:#fff;border-radius:8px;padding:10px 14px;font-weight:800;font-size:13.5px;cursor:pointer;transition:.15s}
+.btn-tool:hover{background:#0a7d5f}
+.btn-tool.off{background:#3a7bd0}
+.btn-tool.off:hover{background:#2f66b0}
+.btn-flag{border:1.5px solid #e08a00;color:#a86500;background:#fff;border-radius:8px;padding:9px 14px;font-weight:700;font-size:13px;cursor:pointer;transition:.15s}
+.btn-flag:hover{background:#fff4e0}
+.btn-flag.on{background:#0b9b77;border-color:#0b9b77;color:#fff}
+/* Soluzione già adottata dalla scuola: azione disabilitata + disclaimer */
+.btn-add.is-adopted,.btn-flag.is-adopted,.btn-add-lg.is-adopted{background:#e5e9f0;border:1.5px solid #dbe1ea;color:#8a94a6;cursor:not-allowed;pointer-events:none;box-shadow:none}
+.adopted-note{display:flex;align-items:center;gap:7px;font-size:12px;color:#0b7a5b;background:#e7f7f1;border:1px solid #bfe8d8;border-radius:8px;padding:7px 11px;margin-top:10px;font-weight:600;line-height:1.35}
+.tool-status{font-size:11.5px;font-weight:700;border-radius:20px;padding:3px 10px}
+.tool-status.active{color:#0b7a5b;background:#e7f7f1;border:1px solid #bfe8d8}
+.tool-status.todo{color:#8a6d3b;background:#fbf3e2;border:1px solid #efdcb4}
+.db-hint{flex:1;min-width:220px;font-size:12.5px;color:var(--muted);line-height:1.45}
+.db-hint b{color:var(--ink)}
+.livello-tag{position:absolute;top:12px;right:14px;font-size:11px;font-weight:700;color:var(--muted);background:#f1f4f9;padding:2px 8px;border-radius:6px}
+
+/* piano di adozione */
+.plan{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);box-shadow:0 -8px 30px rgba(18,35,92,.12);z-index:45}
+.plan-inner{max-width:1280px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:26px;flex-wrap:wrap}
+.plan-metric{display:flex;flex-direction:column;min-width:96px}
+.plan-metric .k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;font-weight:700}
+.plan-metric .v{font-size:20px;font-weight:900;color:var(--ink)}
+.plan-metric.residuo .v.ok{color:#0b9b77}
+.plan-metric.residuo .v.over{color:#e3553b}
+.plan-bar-wrap{flex:1;min-width:180px}
+.plan-bar-track{height:10px;background:#eef2f8;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+.plan-bar-fill{height:100%;background:linear-gradient(90deg,#2c5ad0,#0b9b77);width:0;transition:.3s}
+.plan-bar-fill.over{background:linear-gradient(90deg,#e08a00,#e3553b)}
+.plan-bar-label{font-size:12px;color:var(--muted);margin-top:5px}
+.plan-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn-ghost{border:1.5px solid var(--unica);color:var(--unica);background:#fff;border-radius:8px;padding:11px 16px;font-weight:700;font-size:14px}
+.btn-clear{border:1.5px solid #e2e5ee;color:var(--muted);background:#fff;border-radius:8px;padding:11px 16px;font-weight:700;font-size:14px;cursor:pointer;transition:.15s}
+.btn-clear:hover{border-color:#e3553b;color:#e3553b;background:#fff5f3}
+.btn-ghost:hover{background:#eaf0fc}
+.plan-warning{color:#e3553b;font-weight:700;font-size:13px}
+
+/* toast */
+.toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--gov);color:#fff;padding:12px 22px;border-radius:10px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:60;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.footer{background:var(--gov);color:rgba(255,255,255,.85);font-size:13px}
+.footer-inner{max-width:1280px;margin:0 auto;padding:20px 24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+
+/* ===== Banner scuola cliccabile ===== */
+.school-card{cursor:pointer;transition:.15s}
+.school-card:hover{box-shadow:0 14px 38px rgba(18,35,92,.18);transform:translateY(-2px)}
+.school-cta{margin-left:auto;display:inline-flex;align-items:center;gap:6px;background:#eaf0fc;color:var(--unica);font-weight:700;font-size:13px;padding:8px 14px;border-radius:20px}
+
+/* ===== Panoramica scuola ===== */
+.school-view{display:none}
+.school-view.show{display:block}
+.link-inline{cursor:pointer;text-decoration:underline;opacity:.9}
+.link-inline:hover{opacity:1}
+.btn-back{display:inline-flex;align-items:center;gap:8px;background:#fff;color:#234ab0;font-weight:800;font-size:14px;border:none;padding:9px 18px;border-radius:24px;cursor:pointer;margin-bottom:14px;box-shadow:0 3px 10px rgba(0,0,0,.18);transition:.15s}
+.btn-back:hover{background:#eef2fd;transform:translateX(-3px);box-shadow:0 6px 16px rgba(0,0,0,.24)}
+.btn-back .arw{font-size:17px;line-height:1}
+.school-body{max-width:1280px;margin:0 auto;padding:22px 24px 90px}
+.alert-box{display:flex;align-items:center;gap:12px;border-radius:12px;padding:14px 18px;margin-bottom:18px;font-size:14.5px;font-weight:600}
+.alert-box.danger{background:#fdece9;border:1px solid #f6c9c0;color:#c0392b}
+.alert-box.ok{background:#e7f7f1;border:1px solid #bfe8d8;color:#0b7a5b}
+.kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:8px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:15px 16px}
+.kpi .k{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;font-weight:700}
+.kpi .v{font-size:25px;font-weight:900;color:var(--ink);line-height:1.1;margin-top:5px}
+.kpi .sub{font-size:12px;color:var(--muted);margin-top:2px}
+.kpi.accent .v{color:var(--unica)}
+.kpi.good .v{color:#0b9b77}
+.kpi.warn .v{color:#e3553b}
+.sec-title{font-size:20px;color:var(--gov);margin:28px 0 6px;font-weight:800}
+.sec-hint{font-size:13.5px;color:var(--muted);margin-bottom:14px}
+.atable{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.atable th{background:#f5f7fb;text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);font-weight:700;padding:12px 14px;border-bottom:1px solid var(--line)}
+.atable td{padding:14px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:middle}
+.atable tr:last-child td{border-bottom:none}
+.atable tr:hover td{background:#fafbfe}
+.sol-name{font-weight:700;color:var(--gov);display:flex;align-items:center;gap:8px}
+.amb-dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+.amb-sub{font-size:12px;color:var(--muted);font-weight:600;margin-top:2px;margin-left:17px}
+.uso-wrap{min-width:120px}
+.uso-track{height:8px;background:#eef2f8;border-radius:5px;overflow:hidden;border:1px solid var(--line)}
+.uso-fill{height:100%;border-radius:5px}
+.uso-lab{font-size:12px;color:var(--muted);margin-top:4px;font-weight:600}
+.lic{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;padding:4px 10px;border-radius:8px;white-space:nowrap}
+.lic .licdot{width:8px;height:8px;border-radius:50%}
+.lic.ok{background:#e7f7f1;color:#0b7a5b}
+.lic.ok .licdot{background:#0b9b77}
+.lic.warn{background:#fff4e0;color:#a86500}
+.lic.warn .licdot{background:#e08a00}
+.lic.danger{background:#fdece9;color:#c0392b}
+.lic.danger .licdot{background:#e3553b}
+.lic-sub{font-size:11px;color:var(--muted);font-weight:600;margin-top:3px}
+.btn-mini{border:1.5px solid var(--unica);color:var(--unica);background:#fff;border-radius:8px;padding:7px 12px;font-weight:700;font-size:12.5px;white-space:nowrap;transition:.12s}
+.btn-mini:hover{background:#eaf0fc}
+.btn-mini.danger{border-color:#e3553b;color:#e3553b}
+.btn-mini.danger:hover{background:#fdece9}
+.insights{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:26px}
+.insight{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.insight h4{font-size:13px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);margin-bottom:10px}
+.insight .big{font-size:19px;font-weight:800;color:var(--gov)}
+.insight .note{font-size:13.5px;color:var(--muted);margin-top:6px}
+.ambdist{display:flex;flex-direction:column}
+.amb-stack{display:flex;height:16px;border-radius:9px;overflow:hidden;gap:2px;margin-bottom:18px;box-shadow:inset 0 0 0 1px rgba(18,35,92,.05)}
+.amb-stack .seg{transition:flex .4s ease;min-width:8px}
+.amb-stack .seg:first-child{border-radius:9px 0 0 9px}
+.amb-stack .seg:last-child{border-radius:0 9px 9px 0}
+.amb-legend{display:flex;flex-direction:column;gap:13px}
+.amb-item{display:grid;grid-template-columns:12px 104px 1fr auto;align-items:center;gap:11px;font-size:13px}
+.amb-item:hover .amb-barfill{filter:brightness(.94)}
+.amb-dotc{width:11px;height:11px;border-radius:50%;box-shadow:0 0 0 3px rgba(0,0,0,.04)}
+.amb-name{color:var(--ink);font-weight:700}
+.amb-bar{height:9px;background:#eef2f8;border-radius:6px;overflow:hidden}
+.amb-barfill{display:block;height:100%;border-radius:6px;min-width:8px;transition:width .5s ease}
+.amb-meta{display:flex;align-items:baseline;gap:7px;justify-self:end}
+.amb-num{font-weight:800;color:var(--ink);font-size:15px}
+.amb-pct{font-weight:700;color:var(--muted);font-size:11.5px;background:#f2f5fa;border-radius:20px;padding:2px 8px}
+
+/* ===== Riga soluzione-app (apre l'applicazione) ===== */
+.row-app{cursor:pointer}
+.row-app:hover td{background:#f2f6ff}
+.app-badge{display:inline-block;font-size:10px;font-weight:800;color:#2c5ad0;background:#e7eefc;border:1px solid #cfe0fc;border-radius:6px;padding:1px 7px;margin-left:8px;text-transform:uppercase;letter-spacing:.3px;vertical-align:middle}
+
+/* ===== Traduttore Comunicazioni Multilingue ===== */
+.tr-overlay{position:fixed;inset:0;background:rgba(12,20,45,.6);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;z-index:320;padding:24px}
+.tr-overlay.show{display:flex}
+.tr-modal{background:#fff;border-radius:16px;width:min(1000px,100%);max-height:92vh;display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(12,20,45,.42);overflow:hidden;animation:pop .18s ease}
+.tr-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line);background:linear-gradient(120deg,#f3f6fd,#eef2fb)}
+.tr-brand{display:flex;align-items:center;gap:12px}
+.tr-logo{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,#2c5ad0,#7b4fd3);color:#fff;font-size:21px;box-shadow:0 6px 16px rgba(44,90,208,.3)}
+.tr-title{font-size:17px;font-weight:800;color:var(--ink)}
+.tr-sub{font-size:12.5px;color:var(--muted);margin-top:1px}
+.tr-x{width:34px;height:34px;border:none;background:#eef2f8;border-radius:9px;font-size:21px;line-height:1;color:var(--muted);cursor:pointer}
+.tr-x:hover{background:#e0e5ef;color:var(--ink)}
+.tr-templates{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:11px 20px;border-bottom:1px solid var(--line);background:#fafbfe}
+.tr-tpl-lab{font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.tr-tpl{border:1px solid var(--line);background:#fff;border-radius:20px;padding:6px 13px;font-size:12.5px;font-weight:600;color:var(--unica);cursor:pointer;transition:.12s}
+.tr-tpl:hover{background:#eaf0fc;border-color:#c9d7f5}
+.tr-tpl.tr-pdf{background:#eef7f2;border-color:#bfe3d3;color:#0b7a5b;font-weight:700}
+.tr-tpl.tr-pdf:hover{background:#e0f2e8}
+.tr-pdf-name{font-size:12px;color:var(--muted);font-weight:600}
+/* Riga strumenti del traduttore (Carica PDF · I miei PDF · Libreria) */
+.tr-tools-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 20px;border-bottom:1px solid var(--line);background:#fbfcfe}
+.tr-tool-btn{border:1px solid #d7deea;background:#fff;border-radius:9px;padding:8px 14px;font-weight:700;font-size:13px;color:var(--gov);cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:.15s}
+.tr-tool-btn:hover{background:#eef3fd;border-color:#c9d7f5}
+.tr-tool-btn.tr-pdf{background:#eef7f2;border-color:#bfe3d3;color:#0b7a5b}
+.tr-tool-btn.tr-pdf:hover{background:#e0f2e8}
+.tr-badge{background:#2c5ad0;color:#fff;font-size:11px;font-weight:800;min-width:18px;height:18px;border-radius:10px;display:inline-grid;place-items:center;padding:0 5px}
+.tr-panel{display:none;flex:1;overflow:auto;padding:16px 20px;background:#fff}
+.tr-panel.show{display:block}
+.tr-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.tr-panel-title{font-weight:900;color:var(--gov);font-size:16px}
+.tr-back{border:none;background:#eef3fd;color:var(--gov);font-weight:700;border-radius:8px;padding:7px 12px;cursor:pointer}
+.tr-back:hover{background:#e2ebfc}
+.lib-sec{border:1px solid var(--line);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.lib-sec-head{display:flex;align-items:center;gap:9px;padding:11px 14px;background:#f4f7fd;font-weight:800;color:var(--gov);font-size:14px}
+.lib-sec-head .lib-open{margin-left:auto;font-size:12px;font-weight:700;color:var(--unica);text-decoration:none;white-space:nowrap}
+.lib-doc{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-top:1px solid var(--line)}
+.ld-main{flex:1;min-width:0}
+.ld-t{font-weight:700;color:var(--ink);font-size:14px}
+.ld-d{font-size:12px;color:var(--muted);margin:2px 0 4px}
+.ld-x{font-size:12.5px;color:#2a3550;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ld-actions{display:flex;flex-direction:column;gap:6px;flex:none;align-items:stretch}
+.ld-btn{border:none;background:#2c5ad0;color:#fff;font-weight:700;font-size:12px;border-radius:8px;padding:7px 11px;cursor:pointer;white-space:nowrap}
+.ld-btn:hover{background:#2247a8}
+.ld-link{font-size:11.5px;color:var(--unica);text-decoration:none;text-align:center}
+.ld-rm{border:1px solid #e6b0a6;background:#fff;color:#c0392b;font-weight:700;font-size:12px;border-radius:8px;padding:6px 10px;cursor:pointer}
+.ld-rm:hover{background:#fbecea}
+.lib-upload{border:1px dashed #b9cdf2;border-radius:12px;padding:14px;margin-bottom:14px;background:#f4f8ff}
+.lib-upload h4{margin:0 0 4px;color:var(--gov);font-size:14px}
+.lib-upload .lu-note{font-size:12px;color:var(--muted);margin-bottom:10px}
+.lib-upload .lu-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.lib-upload input[type=text]{flex:1;min-width:170px;border:1px solid #d7deea;border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit}
+.hist-empty,.lib-empty{color:var(--muted);font-size:13px;padding:8px 0}
+.hist-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.hist-item:last-child{border-bottom:none}
+.hist-ic{width:38px;height:38px;border-radius:10px;background:#eef7f2;display:grid;place-items:center;font-size:18px;flex:none}
+.tr-body{display:grid;grid-template-columns:1fr 44px 1fr;flex:1;min-height:0;overflow:auto}
+.tr-pane{display:flex;flex-direction:column;min-height:0;padding:15px 18px}
+.tr-pane-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px;min-height:36px}
+.tr-lang-fixed{font-size:14px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:8px}
+.tr-detect{font-size:11px;font-weight:600;color:var(--muted);background:#eef2f8;border-radius:20px;padding:2px 9px}
+.tr-lang-sel{font-size:14px;font-weight:700;color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:8px 10px;background:#fff;cursor:pointer;max-width:230px}
+.tr-count{font-size:11.5px;color:var(--muted)}
+.tr-copy{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 12px;font-size:12.5px;font-weight:700;color:var(--unica);cursor:pointer}
+.tr-copy:hover{background:#eaf0fc}
+.tr-ta{flex:1;min-height:240px;resize:none;border:1px solid var(--line);border-radius:12px;padding:14px 15px;font-size:15px;line-height:1.55;color:var(--ink);font-family:inherit;outline:none;background:#fff}
+.tr-ta:focus{border-color:#9db8ee;box-shadow:0 0 0 3px rgba(44,90,208,.12)}
+.tr-ta.out{background:#f7f9fc}
+.tr-ta.out.rtl{direction:rtl;text-align:right}
+.tr-swap{display:grid;place-items:center;color:#c2ccdd;font-size:22px;font-weight:700}
+.tr-status{font-size:12px;color:var(--muted);margin-top:8px;min-height:16px;display:flex;align-items:center;gap:7px}
+.tr-status .dot{width:8px;height:8px;border-radius:50%;background:#2c5ad0;animation:trpulse 1s infinite}
+@keyframes trpulse{0%,100%{opacity:.3}50%{opacity:1}}
+.tr-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 20px;border-top:1px solid var(--line);background:#f6f8fc;flex-wrap:wrap}
+.tr-note{font-size:12px;color:var(--muted)}
+.tr-actions{display:flex;gap:8px}
+.tr-btn{border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:700;font-size:13px;padding:8px 14px;border-radius:8px;cursor:pointer}
+.tr-btn:hover{background:#eef2f8}
+.tr-btn.primary{background:#2c5ad0;color:#fff;border-color:#2c5ad0}
+.tr-btn.primary:hover{background:#2247a8}
+@media(max-width:720px){.tr-body{grid-template-columns:1fr}.tr-swap{transform:rotate(90deg);height:28px}}
+
+@media(max-width:960px){
+  .kpi-grid{grid-template-columns:repeat(3,1fr)}
+  .insights{grid-template-columns:1fr}
+  .atable{display:block;overflow-x:auto;white-space:nowrap}
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .features{grid-template-columns:1fr}
+  .hero-people{opacity:.18;right:-40px}
+  .hero-title{width:min(320px,72vw)}
+  .nav{display:none}
+}
+@media(max-width:620px){
+  .grid{grid-template-columns:1fr}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ BARRA GOVERNO ============ -->
+<div class="govbar">
+  <div class="govbar-inner">
+    <img class="gov-emblem" src="assets/emblema.svg" alt="Emblema della Repubblica Italiana">
+    <span class="min">Ministero dell'Istruzione e del Merito</span>
+    <span class="spacer"></span>
+    <a class="gov-link" href="#">Assistenza</a>
+    <a class="gov-link" href="#">Italiano ▾</a>
+    <div class="gov-login">
+      <button class="gov-link login-toggle" id="loginToggle" onclick="toggleLogin(event)">Accedi ▾</button>
+      <div class="login-menu" id="loginMenu" onclick="event.stopPropagation()">
+        <div class="login-menu-h">Accedi secondo la profilazione UNICA</div>
+        <button onclick="pickProfile('dirigente')">🏛️ <span>Dirigente scolastico</span></button>
+        <button onclick="pickProfile('docente')">👩‍🏫 <span>Docente</span></button>
+        <button onclick="pickProfile('ata')">🗂️ <span>Personale amministrativo</span></button>
+        <button onclick="pickProfile('studente')">🎓 <span>Studente</span></button>
+        <button onclick="pickProfile('genitore')">👪 <span>Genitore / Famiglia</span></button>
+        <div class="login-sep"></div>
+        <button class="login-exit" onclick="logout()">🚪 <span>Esci</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ HEADER UNICA ============ -->
+<header class="header">
+  <div class="header-inner">
+    <div class="logo" onclick="goHome()" style="cursor:pointer"><img class="logo-img" src="assets/unica-logo.svg" alt="Unica"></div>
+    <nav class="nav">
+      <button class="nav-item disabled">Cos'è Unica</button>
+      <button class="nav-item disabled">Orientamento <span class="caret">▾</span></button>
+      <button class="nav-item disabled">Vivere la scuola <span class="caret">▾</span></button>
+      <button class="nav-item disabled">Strumenti <span class="caret">▾</span></button>
+      <button class="nav-item gaia" id="navGaia" onclick="goGaiaIntro()">G.A.I.A. <span class="badge">Novità</span></button>
+    </nav>
+    <span class="spacer"></span>
+  </div>
+</header>
+
+<!-- ============ HOME VIEW ============ -->
+<main class="home-view" id="homeView">
+  <section class="hero">
+    <div class="hero-inner">
+      <img class="hero-title" src="assets/tutti.svg" alt="La scuola di tutti">
+      <div class="lead">Un modo nuovo per avvicinare scuola, studenti, famiglie</div>
+      <div class="callout">Un mondo di servizi digitali <b>per accompagnare ragazze e ragazzi nel percorso di crescita</b>, per aiutarli a fare scelte consapevoli e a coltivare e far emergere i loro talenti.</div>
+    </div>
+    <img class="hero-people" src="assets/people.svg" alt="">
+  </section>
+
+  <div class="demo-banner">
+    <div class="demo-banner-inner">
+      <div class="txt">
+        <h3>Novità nell'ecosistema: G.A.I.A.</h3>
+        <p>Marketplace nazionale di soluzioni di Intelligenza Artificiale per le scuole, integrato in UNICA e validato secondo le Linee guida MIM. <b>In questa demo è navigabile la sola sezione G.A.I.A.</b></p>
+      </div>
+      <button class="btn-primary" onclick="goGaiaIntro()">Scopri G.A.I.A. →</button>
+    </div>
+  </div>
+
+  <div class="features">
+    <div class="feature"><div class="ic">🎓</div><h4>Orientamento</h4><p>Risorse per l'orientamento e per valorizzare i talenti di ogni studente.</p></div>
+    <div class="feature"><div class="ic">🏫</div><h4>Vivere la scuola</h4><p>Iniziative che arricchiscono il percorso di studi.</p></div>
+    <div class="feature"><div class="ic">🧩</div><h4>Strumenti</h4><p>Servizi digitali innovativi per gestire i rapporti con la scuola.</p></div>
+  </div>
+</main>
+
+<!-- ============ INTRO G.A.I.A. ============ -->
+<main class="gaia-intro" id="gaiaIntroView">
+  <section class="intro-hero">
+    <div class="intro-hero-inner">
+      <div class="gaia-logo">
+        <span class="gaia-logo-mark">
+          <svg width="42" height="42" viewBox="0 0 40 40" fill="#fff" aria-hidden="true">
+            <path d="M19 15.5 C15 13, 9.5 12.6, 6 13.6 C5.4 13.8, 5 14.3, 5 15 V28 C5 28.8, 5.7 29.4, 6.5 29.2 C9.8 28.5, 15.2 28.9, 19 31 Z"/>
+            <path d="M21 15.5 C25 13, 30.5 12.6, 34 13.6 C34.6 13.8, 35 14.3, 35 15 V28 C35 28.8, 34.3 29.4, 33.5 29.2 C30.2 28.5, 24.8 28.9, 21 31 Z" fill-opacity=".88"/>
+            <path d="M32 5 l1.05 2.8 2.8 1.05 -2.8 1.05 -1.05 2.8 -1.05 -2.8 -2.8 -1.05 2.8 -1.05 Z"/>
+          </svg>
+        </span>
+        <span class="gaia-logo-word">G.A.I.A.</span>
+      </div>
+      <div class="gaia-logo-tag">Gestione e Apprendimento con Intelligenza Artificiale</div>
+      <p class="intro-claim">Il marketplace nazionale delle soluzioni di Intelligenza Artificiale per la scuola: un unico luogo per scegliere, adottare e <b>usare direttamente</b> gli strumenti — integrato in UNICA e governato secondo le Linee guida del Ministero dell'Istruzione e del Merito.</p>
+      <div class="intro-access">
+        <div class="intro-access-hint" id="introAccessHint">Scegli la tipologia di accesso dal menu <b>“Accedi”</b> in alto a destra, secondo la profilazione di UNICA.</div>
+        <button class="intro-cta" id="introAccessCta" style="display:none" onclick="enterAs()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg>
+          <span id="introCtaLabel">Accesso</span>
+        </button>
+        <div class="intro-access-desc" id="introAccessDesc"></div>
+        <div class="intro-cta-note">Demo · accesso con identità digitale <b>SPID / CIE</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="intro-body">
+    <h2 class="intro-h2">Cos'è G.A.I.A.</h2>
+    <p class="intro-lead">G.A.I.A. è il <b>marketplace nazionale</b> del Ministero dell'Istruzione e del Merito che raccoglie le soluzioni di Intelligenza Artificiale utili alla scuola — didattica, inclusione, orientamento, prevenzione della dispersione e gestione amministrativa. Sul modello dei <b>marketplace pubblici qualificati</b>, una soluzione entra nel marketplace <b>solo dopo essere stata validata secondo le Linee guida MIM</b> e verificata per conformità a GDPR e AI Act. Il dirigente scolastico trova così strumenti affidabili, li confronta e compone il proprio piano di adozione entro il budget assegnato, con la garanzia che tutto ciò che vede è già conforme e sicuro. E non è solo una vetrina: <b>una volta acquistate, le soluzioni si attivano e si usano direttamente dal portale</b>, senza dover gestire fornitori, contratti e installazioni separate.</p>
+
+    <div class="intro-cards">
+      <div class="intro-card">
+        <div class="ic" style="background:#eaf0fc;color:#2c5ad0">🛒</div>
+        <h4>Marketplace qualificato</h4>
+        <p>Un unico punto per scegliere, acquistare e <b>usare</b> le soluzioni AI per la scuola, selezionate e pre-qualificate a livello nazionale. Basta valutazioni disperse istituto per istituto: la qualifica la fa il MIM.</p>
+      </div>
+      <div class="intro-card">
+        <div class="ic" style="background:#eefaf5;color:#0b9b77">🛡️</div>
+        <h4>Conformità garantita</h4>
+        <p>Ogni soluzione rispetta le Linee guida MIM, il GDPR e l'AI Act. Su ogni scheda è indicata la <b>classe di rischio AI Act</b> con i presidi di governance richiesti (es. DPIA, supervisione umana).</p>
+      </div>
+      <div class="intro-card">
+        <div class="ic" style="background:#fff4e0;color:#a86500">🎯</div>
+        <h4>La scuola al centro</h4>
+        <p>Ogni profilo accede secondo la profilazione UNICA — dirigenti, docenti, personale amministrativo, studenti e famiglie: ciascuno trova gli strumenti pensati per il proprio ruolo, con costi, formazione e impatto trasparenti.</p>
+      </div>
+    </div>
+
+    <div class="intro-how">
+      <h3>Come funziona</h3>
+      <div class="intro-steps">
+        <div class="intro-step"><div class="num">1</div><p>Esplora il marketplace e filtra per ambito, costo e budget disponibile.</p></div>
+        <div class="intro-step"><div class="num">2</div><p>Approfondisci ogni soluzione con la scheda di dettaglio.</p></div>
+        <div class="intro-step"><div class="num">3</div><p>Componi il piano di adozione entro la quota libera assegnata.</p></div>
+        <div class="intro-step"><div class="num">4</div><p>Genera il progetto da portare al Consiglio di Istituto.</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ G.A.I.A. VIEW ============ -->
+<main class="gaia-view" id="gaiaView">
+  <div class="gaia-top">
+    <div class="gaia-top-inner">
+      <div class="breadcrumb">UNICA › <b>G.A.I.A.</b> — Marketplace Nazionale Soluzioni AI <span class="profile-chip" id="profileChip"></span></div>
+      <div class="gaia-title-row">
+        <div class="gaia-brand">G.A.I.A.</div>
+        <div class="gaia-sub">Gestione e Apprendimento con Intelligenza Artificiale · soluzioni validate secondo le Linee guida MIM</div>
+      </div>
+      <div class="profile-ctx" id="profileCtx"><span class="pc-ic">👤</span><span>Accesso come Dirigente scolastico.</span></div>
+    </div>
+  </div>
+
+  <div class="school-bar">
+    <div class="school-card" onclick="goSchool()" title="Apri la panoramica della scuola">
+      <div class="school-name">IC "Manzoni" — Roma</div>
+      <div class="school-sep"></div>
+      <div class="school-metric"><span class="k">Docenti</span><span class="v">82</span></div>
+      <div class="school-metric"><span class="k">Studenti</span><span class="v">1.100</span></div>
+      <div class="school-metric budget"><span class="k">Budget PN assegnato</span><span class="v">€47.500</span></div>
+      <div class="school-metric"><span class="k">Quota ancora libera</span><span class="v free" id="scFree" title="Fondi non ancora impegnati: budget assegnato meno la spesa delle soluzioni già attive">—</span></div>
+      <span class="school-cta">Panoramica scuola →</span>
+    </div>
+  </div>
+
+  <!-- Banner Istituto (solo Studente / Genitore) -->
+  <div class="inst-banner" id="instituteBanner" style="display:none">
+    <div class="inst-inner">
+      <div class="inst-emblem">🏫</div>
+      <div class="inst-text">
+        <div class="inst-name">IC "Manzoni" — Roma</div>
+        <div class="inst-sub">Istituto Comprensivo statale · Roma · a.s. 2025/2026</div>
+      </div>
+      <a class="inst-link" href="https://cercalatuascuola.istruzione.it/" target="_blank" rel="noopener noreferrer">Sito ufficiale dell'Istituto ↗</a>
+    </div>
+  </div>
+
+  <div class="gaia-body">
+    <div class="view-switch" id="viewSwitch" style="display:none"></div>
+    <div class="view-intro" id="viewIntro" style="display:none"></div>
+    <div class="toolbar">
+      <div class="search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input id="searchInput" type="text" placeholder="Cerca una soluzione AI (es. dispersione, segreteria, tutor...)">
+      </div>
+      <select class="select" id="sortSelect">
+        <option value="rilevanza">Ordina: consigliate</option>
+        <option value="costo-asc">Costo crescente</option>
+        <option value="costo-desc">Costo decrescente</option>
+        <option value="rating">Rating più alto</option>
+        <option value="adozioni">Più adottate</option>
+      </select>
+      <select class="select" id="budgetSelect">
+        <option value="all">Budget: tutti</option>
+        <option value="fit">Solo entro il residuo</option>
+        <option value="lt3">&lt; €3.000</option>
+        <option value="lt5">&lt; €5.000</option>
+      </select>
+    </div>
+
+    <div class="chips" id="chips"></div>
+    <div class="result-count" id="resultCount"></div>
+    <div class="catalog-note">
+      🛡
+      <span>Tutte le soluzioni del catalogo sono <b>validate secondo le Linee guida MIM</b> e conformi a <b>GDPR</b> e <b>AI&nbsp;Act</b>: è il requisito di ammissione. Su ogni scheda è indicata la <b>classe di rischio AI Act</b>, che orienta i presidi di governance richiesti alla scuola:
+      <span class="rk risk-minimo">rischio minimo</span> nessun obbligo aggiuntivo ·
+      <span class="rk risk-limitato">rischio limitato</span> trasparenza verso le famiglie ·
+      <span class="rk risk-alto">rischio alto</span> DPIA e supervisione umana.</span>
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
+</main>
+
+<!-- ============ PANORAMICA SCUOLA ============ -->
+<main class="school-view" id="schoolView">
+  <div class="gaia-top">
+    <div class="gaia-top-inner">
+      <button class="btn-back" onclick="goGaia()"><span class="arw">←</span> Torna al catalogo</button>
+      <div class="breadcrumb">UNICA › G.A.I.A. › <b>La mia scuola</b></div>
+      <div class="gaia-title-row">
+        <div class="gaia-brand" style="font-size:28px;letter-spacing:0">IC "Manzoni" — Roma</div>
+        <div class="gaia-sub">Panoramica soluzioni AI · Dirigente scolastico · a.s. 2025/2026</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="school-body">
+    <div class="view-switch" id="viewSwitchSchool" style="display:none"></div>
+    <div id="licenseAlert"></div>
+    <div class="kpi-grid" id="kpiGrid"></div>
+
+    <h2 class="sec-title">Le tue soluzioni AI attive</h2>
+    <div class="sec-hint">Stato di utilizzo, scadenza delle licenze e coinvolgimento del personale per ciascuna soluzione adottata.</div>
+    <table class="atable">
+      <thead>
+        <tr>
+          <th>Soluzione</th>
+          <th>Costo/anno</th>
+          <th>Licenza</th>
+          <th>Utilizzo</th>
+          <th>Docenti attivi</th>
+          <th>Studenti raggiunti</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="activeTbody"></tbody>
+    </table>
+
+    <div class="insights">
+      <div class="insight">
+        <h4>Soluzioni attive per ambito</h4>
+        <div class="note" id="ambDistSub" style="margin:-4px 0 12px"></div>
+        <div class="ambdist" id="ambDist"></div>
+      </div>
+      <div class="insight" id="usageInsight"></div>
+    </div>
+  </div>
+</main>
+
+<!-- ============ PIANO DI ADOZIONE ============ -->
+<div class="plan" id="planBar" style="display:none">
+  <div class="plan-inner">
+    <div class="plan-metric"><span class="k">Selezionate</span><span class="v" id="pmCount">0</span></div>
+    <div class="plan-metric"><span class="k">Totale</span><span class="v" id="pmTotal">€0</span></div>
+    <div class="plan-metric residuo"><span class="k">Residuo quota libera</span><span class="v ok" id="pmResiduo">€28.300</span></div>
+    <div class="plan-metric"><span class="k">Formazione</span><span class="v" id="pmOre">0h</span></div>
+    <div class="plan-metric"><span class="k">Docenti coinvolti</span><span class="v" id="pmDoc">0</span></div>
+    <div class="plan-bar-wrap">
+      <div class="plan-bar-track"><div class="plan-bar-fill" id="pmFill"></div></div>
+      <div class="plan-bar-label" id="pmLabel">€0 di €28.300 quota libera impegnati</div>
+    </div>
+    <div class="plan-actions">
+      <span class="plan-warning" id="pmWarn" style="display:none">⚠ Quota libera superata</span>
+      <button class="btn-clear" onclick="resetPlan()" title="Svuota il piano di adozione">↺ Ripristina</button>
+      <button class="btn-ghost" onclick="composePath()">Componi il tuo percorso</button>
+      <button class="btn-ghost" onclick="downloadProject()">Genera progetto per CdI</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ BARRA DOCENTE (segnalazioni) ============ -->
+<div class="plan" id="docenteBar" style="display:none">
+  <div class="plan-inner">
+    <div class="plan-metric"><span class="k">Strumenti pronti all'uso</span><span class="v" id="dbTools">7</span></div>
+    <div class="plan-metric"><span class="k">Segnalati al Dirigente</span><span class="v" id="dbCount">0</span></div>
+    <div class="db-hint" id="dbHint">Come docente non gestisci il budget: <b>segnala al Dirigente Scolastico</b> gli strumenti che ritieni utili. Sarà lui a valutarne l'adozione.</div>
+    <div class="plan-actions">
+      <button class="btn-clear" onclick="resetFlags()" title="Azzera le segnalazioni">↺ Azzera</button>
+      <button class="btn-ghost" id="dbSend" onclick="sendFlags()" disabled>Invia segnalazioni al Dirigente</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODALE DEEP DIVE ============ -->
+<div class="modal-overlay" id="detailModal" onclick="if(event.target===this)closeDetail()">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mdTitle">
+    <button class="modal-x" onclick="closeDetail()" aria-label="Chiudi">×</button>
+    <div id="detailBody"></div>
+  </div>
+</div>
+
+<!-- ============ MODALE INBOX SEGNALAZIONI ============ -->
+<div class="modal-overlay" id="inboxModal" onclick="if(event.target===this)closeInbox()">
+  <div class="modal" role="dialog" aria-modal="true">
+    <button class="modal-x" onclick="closeInbox()" aria-label="Chiudi">×</button>
+    <div class="md-top" style="background:#2c5ad0"></div>
+    <div class="md-pad">
+      <h2 class="md-title" style="margin-bottom:6px">📥 Segnalazioni dal personale</h2>
+      <div class="md-desc" id="inboxLead" style="margin-bottom:14px"></div>
+      <div class="inbox-tabs">
+        <button class="ibtab on" id="ibtabA" onclick="setInboxView('attive')">Da valutare <span class="ibn" id="ibCountA">0</span></button>
+        <button class="ibtab" id="ibtabB" onclick="setInboxView('archiviate')">🗄 Archiviate <span class="ibn" id="ibCountB">0</span></button>
+      </div>
+      <div id="inboxList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODALE STANDBY STRUMENTO ============ -->
+<div class="modal-overlay" id="standbyModal" onclick="if(event.target===this)closeStandby()">
+  <div class="modal" role="dialog" aria-modal="true" style="max-width:520px">
+    <button class="modal-x" onclick="closeStandby()" aria-label="Chiudi">×</button>
+    <div class="md-top" style="background:#e08a00"></div>
+    <div class="md-pad" style="text-align:center">
+      <div style="font-size:46px;line-height:1;margin:6px 0 8px">🚧</div>
+      <h2 class="md-title" id="sbTitle" style="max-width:100%;margin:0 auto 8px">Soluzione in standby</h2>
+      <div class="md-desc" id="sbDesc" style="margin-bottom:22px"></div>
+      <button class="btn-add-lg" style="background:#2c5ad0" onclick="closeStandby();openTranslator()">🌐 Vai al Traduttore multilingue</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ANTEPRIMA PDF ============ -->
+<div class="pdf-overlay" id="pdfModal" onclick="if(event.target===this)closePdf()">
+  <div class="pdf-modal">
+    <div class="pdf-head">
+      <div class="pdf-title">Progetto per il Consiglio di Istituto — anteprima</div>
+      <div class="pdf-actions">
+        <button class="pdf-btn" onclick="openPdfTab()">↗ Apri in nuova scheda</button>
+        <button class="pdf-btn primary" onclick="savePdf()">⬇ Scarica PDF</button>
+        <button class="pdf-x" onclick="closePdf()" aria-label="Chiudi">×</button>
+      </div>
+    </div>
+    <iframe id="pdfFrame" class="pdf-frame" title="Anteprima del progetto in PDF"></iframe>
+  </div>
+</div>
+
+<!-- ============ TRADUTTORE COMUNICAZIONI MULTILINGUE ============ -->
+<div class="tr-overlay" id="trModal" onclick="if(event.target===this)closeTranslator()">
+  <div class="tr-modal" role="dialog" aria-modal="true" aria-labelledby="trTitle">
+    <div class="tr-head">
+      <div class="tr-brand">
+        <span class="tr-logo">🌐</span>
+        <div>
+          <div class="tr-title" id="trTitle">Traduttore Comunicazioni Multilingue</div>
+          <div class="tr-sub">G.A.I.A. · traduzione AI delle comunicazioni scolastiche in <b>30 lingue</b></div>
+        </div>
+      </div>
+      <button class="tr-x" onclick="closeTranslator()" aria-label="Chiudi">×</button>
+    </div>
+    <div class="tr-templates">
+      <span class="tr-tpl-lab">Modelli rapidi:</span>
+      <button class="tr-tpl" onclick="trTemplate(0)">Chiusura anticipata</button>
+      <button class="tr-tpl" onclick="trTemplate(1)">Convocazione colloqui</button>
+      <button class="tr-tpl" onclick="trTemplate(2)">Uscita didattica</button>
+      <button class="tr-tpl" onclick="trTemplate(3)">Iscrizioni</button>
+    </div>
+    <div class="tr-tools-row">
+      <button class="tr-tool-btn tr-pdf" onclick="document.getElementById('trPdfInput').click()">📄 Carica PDF</button>
+      <input type="file" id="trPdfInput" accept="application/pdf" style="display:none" onchange="trLoadPdf(event)">
+      <button class="tr-tool-btn" onclick="trShowPanel('history')">🗂 I miei PDF <span class="tr-badge" id="trHistCount">0</span></button>
+      <button class="tr-tool-btn" onclick="trShowPanel('library')">📚 Libreria documenti IC Manzoni</button>
+      <span class="tr-pdf-name" id="trPdfName"></span>
+      <input type="file" id="trLibPdfInput" accept="application/pdf" style="display:none" onchange="libAddPdf(event)">
+    </div>
+    <div class="tr-panel" id="trPanel"></div>
+    <div class="tr-body" id="trBody">
+      <div class="tr-pane">
+        <div class="tr-pane-head">
+          <span class="tr-lang-fixed">🇮🇹 Italiano <span class="tr-detect">lingua rilevata</span></span>
+          <span class="tr-count" id="trSrcCount">0 caratteri</span>
+        </div>
+        <textarea id="trSource" class="tr-ta" placeholder="Scrivi o incolla qui la circolare / comunicazione da tradurre…" oninput="updateTrCount();scheduleTranslate()"></textarea>
+      </div>
+      <div class="tr-swap">→</div>
+      <div class="tr-pane">
+        <div class="tr-pane-head">
+          <select id="trLang" class="tr-lang-sel" onchange="doTranslate()"></select>
+          <button class="tr-copy" onclick="trCopy()">⧉ Copia</button>
+        </div>
+        <textarea id="trOut" class="tr-ta out" readonly placeholder="La traduzione comparirà qui…"></textarea>
+        <div class="tr-status" id="trStatus"></div>
+      </div>
+    </div>
+    <div class="tr-foot" id="trFoot">
+      <span class="tr-note">🔒 Testi e PDF elaborati solo per la traduzione · nessuna conservazione · trattamento in UE (demo)</span>
+      <div class="tr-actions">
+        <button class="tr-btn" onclick="trSpeak()">🔊 Ascolta</button>
+        <button class="tr-btn" onclick="trTranslateAll()">🌐 Traduci nelle 30 lingue</button>
+        <button class="tr-btn primary" onclick="trCopy()">Copia traduzione</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ WORKSPACE STRUMENTO AI (Docente) ============ -->
+<div class="tr-overlay" id="toolModal" onclick="if(event.target===this)closeTool()">
+  <div class="tr-modal" role="dialog" aria-modal="true" aria-labelledby="toolTitle">
+    <div class="tr-head">
+      <div class="tr-brand">
+        <span class="tr-logo" id="toolLogo">🛠️</span>
+        <div>
+          <div class="tr-title" id="toolTitle">Strumento AI</div>
+          <div class="tr-sub" id="toolSub">G.A.I.A. · strumento didattico</div>
+        </div>
+      </div>
+      <button class="tr-x" onclick="closeTool()" aria-label="Chiudi">×</button>
+    </div>
+    <div class="tr-body">
+      <div class="tr-pane">
+        <div class="tr-pane-head">
+          <span class="tr-lang-fixed">✍️ Input</span>
+          <button class="tr-copy" onclick="toolSample()">Usa esempio</button>
+        </div>
+        <textarea id="toolIn" class="tr-ta" placeholder="Inserisci qui il contenuto…"></textarea>
+      </div>
+      <div class="tr-swap">▶</div>
+      <div class="tr-pane">
+        <div class="tr-pane-head">
+          <span class="tr-lang-fixed">🤖 Risultato AI</span>
+          <button class="tr-copy" onclick="toolCopy()">⧉ Copia</button>
+        </div>
+        <textarea id="toolOut" class="tr-ta out" readonly placeholder="Il risultato generato comparirà qui…"></textarea>
+        <div class="tr-status" id="toolStatus"></div>
+      </div>
+    </div>
+    <div class="tr-foot">
+      <span class="tr-note">🔒 Strumento validato MIM · dati elaborati solo per l'uso didattico · trattamento in UE (demo)</span>
+      <div class="tr-actions">
+        <button class="tr-btn" id="toolSpeakBtn" onclick="toolSpeak()" style="display:none">🔊 Ascolta</button>
+        <button class="tr-btn primary" onclick="toolRun()">▶ Esegui con AI</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <span>G.A.I.A. — Gestione e Apprendimento con Intelligenza Artificiale · Ministero dell'Istruzione e del Merito</span>
+    <span>Demo · integrata nel portale UNICA</span>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+  if(window.pdfjsLib){ pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; }
+</script>
+<script>
+/* ====== Dati ====== */
+const BUDGET = 47500;
+const AMBITI = {
+  amm:   {label:"Amministrativo", color:"var(--amm)"},
+  prev:  {label:"Prevenzione", color:"var(--prev)"},
+  did:   {label:"Didattica", color:"var(--did)"},
+  incl:  {label:"Inclusione", color:"var(--incl)"},
+  orient:{label:"Orientamento", color:"var(--orient)"},
+  gest:  {label:"Gestione", color:"var(--gest)"}
+};
+
+const SOLUTIONS = [
+  {id:1, nome:"Assistente Segreteria AI", amb:"amm", costo:3200, ore:12, adoz:147, rating:4.2, liv:1, doc:8,
+   desc:"Protocollo automatico, classificazione documenti e risposte standard ai genitori. −40% tempo sulle pratiche ripetitive."},
+  {id:2, nome:"Early Warning Dispersione", amb:"prev", costo:5800, ore:16, adoz:89, rating:4.7, liv:2, doc:14,
+   desc:"Predice gli studenti a rischio abbandono (80% accuratezza). Alert al coordinatore con intervento suggerito."},
+  {id:3, nome:"Tutor AI Personalizzato", amb:"did", costo:4500, ore:20, adoz:203, rating:4.4, liv:2, doc:22,
+   desc:"Spiegazioni adattive per studenti, esercizi personalizzati e dashboard docente sui progressi individuali."},
+  {id:4, nome:"Assistente Inclusione BES/DSA", amb:"incl", costo:3800, ore:12, adoz:178, rating:4.9, liv:1, doc:16,
+   desc:"Materiali personalizzati, sintesi vocale, mappe compensative auto-generate e strategie inclusive per il docente."},
+  {id:5, nome:"Generatore Materiali Didattici", amb:"did", costo:2100, ore:8, adoz:412, rating:4.1, liv:1, doc:30,
+   desc:"Verifiche, esercizi e mappe concettuali allineati alle Indicazioni Nazionali. ~5h/settimana risparmiate."},
+  {id:6, nome:"Dashboard Dirigente", amb:"gest", costo:7200, ore:16, adoz:34, rating:4.8, liv:3, doc:4,
+   desc:"Cruscotto AI: rendimenti, fabbisogni, proiezioni iscrizioni e alert criticità. Integra registro e SIDI."},
+  {id:7, nome:"Protocollo Intelligente", amb:"amm", costo:2600, ore:6, adoz:256, rating:4.0, liv:1, doc:6,
+   desc:"Smistamento e archiviazione automatica della corrispondenza in ingresso con fascicolazione assistita."},
+  {id:8, nome:"ChatBot Scuola-Famiglia", amb:"amm", costo:1900, ore:6, adoz:321, rating:4.3, liv:1, doc:10,
+   desc:"Assistente virtuale h24 per le famiglie su scadenze, circolari e procedure. Riduce le richieste al front-office."},
+  {id:9, nome:"Analisi Clima Scolastico", amb:"prev", costo:3400, ore:10, adoz:67, rating:4.5, liv:2, doc:12,
+   desc:"Rileva segnali di disagio e bullismo da questionari e dati anonimizzati. Indicatori di benessere per classe."},
+  {id:10, nome:"Monitoraggio Assenze Predittivo", amb:"prev", costo:2900, ore:8, adoz:112, rating:4.2, liv:2, doc:9,
+   desc:"Individua pattern anomali di assenze e ritardi, segnalando precocemente le situazioni da attenzionare."},
+  {id:11, nome:"Correttore Automatico Prove", amb:"did", costo:3100, ore:10, adoz:145, rating:4.0, liv:2, doc:18,
+   desc:"Correzione assistita di prove strutturate e aperte con rubriche, feedback e riduzione dei tempi di valutazione."},
+  {id:12, nome:"Sintesi Vocale & Testi Semplificati", amb:"incl", costo:2400, ore:8, adoz:198, rating:4.6, liv:1, doc:14,
+   desc:"Trasforma i materiali in versioni accessibili: audio, alto contrasto e testi semplificati per BES/DSA."},
+  {id:13, nome:"Orientamento AI (E-Portfolio+)", amb:"orient", costo:4000, ore:14, adoz:76, rating:4.3, liv:2, doc:11,
+   desc:"Suggerisce percorsi e sbocchi coerenti con attitudini e risultati, a supporto del docente tutor."},
+  {id:14, nome:"Pianificatore Orario AI", amb:"gest", costo:3600, ore:8, adoz:54, rating:4.1, liv:2, doc:5,
+   desc:"Genera l'orario ottimizzando vincoli di aule, cattedre e compresenze. Ricalcolo rapido in caso di modifiche."},
+  {id:15, nome:"Rilevatore Plagio & AI-Detection", amb:"did", costo:2200, ore:4, adoz:289, rating:3.9, liv:1, doc:20,
+   desc:"Verifica originalità degli elaborati e uso non dichiarato di IA generativa, con report per il docente."},
+  {id:16, nome:"Assistente Bandi & Progetti", amb:"amm", costo:4800, ore:12, adoz:61, rating:4.4, liv:2, doc:6,
+   desc:"Supporta la stesura di progetti PNRR/PN: bozze, budget, cronoprogrammi e coerenza con i requisiti dell'avviso."},
+  {id:17, nome:"Traduttore Comunicazioni Multilingue", amb:"incl", costo:1600, ore:4, adoz:233, rating:4.2, liv:1, doc:8,
+   desc:"Traduce circolari e comunicazioni per le famiglie non italofone in 30+ lingue, mantenendo il tono istituzionale."},
+  {id:18, nome:"Gestione Sostituzioni AI", amb:"gest", costo:2800, ore:6, adoz:98, rating:4.0, liv:2, doc:7,
+   desc:"Propone le sostituzioni ottimali dei docenti assenti considerando disponibilità, materia e continuità."},
+  {id:19, nome:"Feedback Formativo Automatico", amb:"did", costo:3300, ore:10, adoz:121, rating:4.3, liv:2, doc:19,
+   desc:"Genera feedback personalizzato e costruttivo sugli elaborati, allineato agli obiettivi di apprendimento."},
+  {id:20, nome:"Learning Analytics d'Istituto", amb:"prev", costo:5200, ore:16, adoz:43, rating:4.6, liv:3, doc:10,
+   desc:"Analizza gli apprendimenti a livello di istituto per individuare gap, punti di forza e azioni di miglioramento."},
+  {id:21, nome:"Assistente Privacy & DPIA", amb:"amm", costo:2000, ore:6, adoz:87, rating:4.1, liv:1, doc:4,
+   desc:"Guida la compilazione di DPIA, registri dei trattamenti e checklist privacy per l'adozione degli strumenti AI."},
+  {id:22, nome:"Laboratorio Coding & AI Literacy", amb:"did", costo:3900, ore:18, adoz:132, rating:4.5, liv:2, doc:15,
+   desc:"Percorsi laboratoriali su pensiero computazionale e uso consapevole dell'IA, con materiali per studenti."}
+];
+
+/* Classe di rischio AI Act per soluzione (attributo differenziante).
+   'alto' = Allegato III (istruzione): valutazione apprendimenti, ammissione, monitoraggio prove. */
+const RISCHIO = {
+  1:'limitato', 2:'alto', 3:'limitato', 4:'limitato', 5:'minimo', 6:'limitato',
+  7:'minimo', 8:'minimo', 9:'limitato', 10:'alto', 11:'alto', 12:'minimo',
+  13:'alto', 14:'minimo', 15:'alto', 16:'minimo', 17:'minimo', 18:'minimo',
+  19:'alto', 20:'alto', 21:'limitato', 22:'minimo'
+};
+const RISK_TITLE = {
+  minimo:"Rischio minimo (AI Act): nessun obbligo aggiuntivo oltre alla trasparenza.",
+  limitato:"Rischio limitato (AI Act): obblighi di trasparenza verso studenti e famiglie.",
+  alto:"Rischio alto (AI Act, Allegato III – istruzione): richiede DPIA, supervisione umana e registrazione degli utilizzi."
+};
+
+/* Destinatari per ambito */
+const DEST = {
+  amm:"Segreteria, DSGA e uffici amministrativi",
+  prev:"Dirigenza, coordinatori e referenti",
+  did:"Docenti e studenti",
+  incl:"Docenti di sostegno e studenti BES/DSA",
+  orient:"Docenti tutor e studenti",
+  gest:"Dirigenza e uffici gestionali"
+};
+/* Governance richiesta in base alla classe di rischio AI Act */
+const GOV_TEXT = {
+  minimo:"<b>Rischio minimo.</b> Nessun obbligo aggiuntivo oltre all'informativa di trasparenza. Dati trattati su server in UE.",
+  limitato:"<b>Rischio limitato.</b> Obblighi di trasparenza verso studenti e famiglie (indicare che è coinvolta un'IA). Dati in UE, base giuridica definita nell'informativa.",
+  alto:"<b>Rischio alto (AI Act, Allegato III – istruzione).</b> Richiede <b>DPIA</b>, <b>supervisione umana</b> costante sulle decisioni e <b>registrazione degli utilizzi</b>. Dati in UE. Consigliato l'uso dell'assistente Privacy &amp; DPIA del catalogo."
+};
+
+/* Deep dive per soluzione */
+const DETAILS = {
+  1:{long:"Automatizza il ciclo documentale della segreteria: protocolla la posta in ingresso, classifica gli atti per tipologia e fascicolo e propone bozze di risposta standard a genitori e uffici.",
+     funz:["Protocollazione e classificazione automatica dei documenti","Bozze di risposta a istanze e richieste ricorrenti","Instradamento agli uffici competenti"],
+     ben:"−40% di tempo sulle pratiche ripetitive",forn:"Fornitore accreditato · SaaS in cloud UE",integra:["Segreteria digitale","SIDI"]},
+  2:{long:"Modello predittivo che incrocia frequenza, esiti e segnali comportamentali per individuare in anticipo gli studenti a rischio di abbandono, con alert e interventi suggeriti al consiglio di classe.",
+     funz:["Punteggio di rischio abbandono per studente (accuratezza ~80%)","Alert al coordinatore con azioni di intervento suggerite","Monitoraggio dell'efficacia degli interventi"],
+     ben:"Rischio abbandono individuato con settimane di anticipo",forn:"Partner di ricerca · modello su dati anonimizzati",integra:["Registro elettronico","SIDI"]},
+  3:{long:"Assistente di studio che adatta spiegazioni ed esercizi al livello del singolo studente e restituisce al docente una dashboard sui progressi individuali e di classe.",
+     funz:["Spiegazioni adattive e percorsi di esercizi personalizzati","Dashboard docente sui progressi per studente","Suggerimenti di recupero e potenziamento"],
+     ben:"Personalizzazione della didattica su larga scala",forn:"Fornitore EdTech · LLM con guardrail didattici",integra:["Registro elettronico","Classroom / Teams"]},
+  4:{long:"Genera automaticamente materiali compensativi e accessibili a partire dai contenuti del docente, con strategie inclusive allineate ai PDP.",
+     funz:["Sintesi vocale, mappe e testi semplificati","Materiali coerenti con PDP/PEI","Suggerimenti di strategie inclusive"],
+     ben:"Materiali accessibili pronti in pochi minuti",forn:"Fornitore specializzato in accessibilità (WCAG)",integra:["Registro elettronico"]},
+  5:{long:"Crea verifiche, esercizi e mappe concettuali allineati alle Indicazioni Nazionali, personalizzabili per classe e livello.",
+     funz:["Verifiche ed esercizi con griglie di valutazione","Mappe concettuali e sintesi","Allineamento alle Indicazioni Nazionali"],
+     ben:"~5 ore/settimana risparmiate per docente",forn:"Fornitore EdTech · SaaS in cloud UE",integra:["Registro elettronico","Export PDF/DOCX"]},
+  6:{long:"Cruscotto direzionale che aggrega rendimenti, fabbisogni e proiezioni iscrizioni con alert sulle criticità dell'istituto.",
+     funz:["Indicatori di rendimento e fabbisogni per plesso/classe","Proiezioni iscrizioni e organico","Alert automatici sulle criticità"],
+     ben:"Decisioni gestionali basate su dati aggiornati",forn:"Fornitore accreditato · integrazione SIDI",integra:["SIDI","Registro elettronico"]},
+  7:{long:"Smista e archivia automaticamente la corrispondenza in ingresso, con fascicolazione assistita e ricerca semantica degli atti.",
+     funz:["Smistamento automatico all'ufficio competente","Fascicolazione e archiviazione assistita","Ricerca semantica nei documenti"],
+     ben:"Archiviazione ordinata e ricerca immediata",forn:"Fornitore di segreteria digitale · SaaS UE",integra:["Segreteria digitale","SIDI"]},
+  8:{long:"Assistente virtuale disponibile h24 che risponde alle famiglie su scadenze, circolari e procedure, riducendo il carico sul front-office.",
+     funz:["Risposte h24 su scadenze e procedure","Base di conoscenza alimentata da circolari e FAQ","Inoltro all'ufficio per le richieste complesse"],
+     ben:"Meno richieste ripetitive al front-office",forn:"Fornitore EdTech · chatbot su base documentale",integra:["Sito d'istituto","Registro elettronico"]},
+  9:{long:"Rileva segnali di disagio e bullismo a partire da questionari e dati anonimizzati, restituendo indicatori di benessere per classe.",
+     funz:["Indicatori di benessere per classe","Rilevazione precoce di segnali di disagio","Report per referenti bullismo e dirigenza"],
+     ben:"Interventi mirati sul benessere degli studenti",forn:"Partner di ricerca · dati anonimizzati",integra:["Moduli / Forms"]},
+  10:{long:"Individua pattern anomali di assenze e ritardi e segnala precocemente le situazioni da attenzionare al coordinatore.",
+     funz:["Rilevazione di pattern anomali di assenze/ritardi","Segnalazione precoce al coordinatore","Trend per classe e per studente"],
+     ben:"Attenzione tempestiva sui casi critici",forn:"Fornitore accreditato · modello sul registro",integra:["Registro elettronico"]},
+  11:{long:"Assiste la correzione di prove strutturate e aperte tramite rubriche, con feedback e riduzione dei tempi, mantenendo la revisione finale del docente.",
+     funz:["Correzione assistita con rubriche","Feedback per studente","Riduzione dei tempi di valutazione"],
+     ben:"Correzione più rapida e uniforme",forn:"Fornitore EdTech · revisione umana obbligatoria",integra:["Registro elettronico","Classroom / Teams"]},
+  12:{long:"Trasforma i materiali in versioni accessibili: audio, alto contrasto e testi semplificati per studenti BES/DSA.",
+     funz:["Audio (text-to-speech) dei materiali","Versioni ad alto contrasto e testi semplificati","Compatibile con strumenti compensativi"],
+     ben:"Accessibilità immediata dei contenuti",forn:"Fornitore accessibilità (WCAG)",integra:["Registro elettronico","Export audio/PDF"]},
+  13:{long:"Suggerisce percorsi e sbocchi coerenti con attitudini e risultati dello studente, a supporto del docente tutor e dell'E-Portfolio.",
+     funz:["Suggerimenti di percorsi coerenti con le attitudini","Integrazione con l'E-Portfolio dello studente","Supporto al docente tutor"],
+     ben:"Orientamento personalizzato e documentato",forn:"Fornitore EdTech · supervisione del docente tutor",integra:["E-Portfolio UNICA","Registro elettronico"]},
+  14:{long:"Genera l'orario ottimizzando i vincoli di aule, cattedre e compresenze, con ricalcolo rapido in caso di modifiche.",
+     funz:["Generazione orario con vincoli complessi","Ricalcolo rapido sulle variazioni","Ottimizzazione aule e compresenze"],
+     ben:"Orario ottimizzato in ore anziché giorni",forn:"Fornitore gestionale · SaaS UE",integra:["Registro elettronico","SIDI"]},
+  15:{long:"Verifica l'originalità degli elaborati e l'uso non dichiarato di IA generativa, con un report a supporto del docente.",
+     funz:["Controllo originalità degli elaborati","Rilevazione di uso non dichiarato di IA generativa","Report a supporto della valutazione"],
+     ben:"Valutazione più equa e trasparente",forn:"Fornitore specializzato · esito validato dal docente",integra:["Registro elettronico","Classroom / Teams"]},
+  16:{long:"Supporta la stesura di progetti PNRR/PN: bozze, budget, cronoprogrammi e verifica di coerenza con i requisiti dell'avviso.",
+     funz:["Bozze di progetto e cronoprogrammi","Impostazione del budget","Verifica di coerenza con l'avviso"],
+     ben:"Candidature più rapide e complete",forn:"Fornitore consulenziale · SaaS UE",integra:["Export PDF/DOCX"]},
+  17:{long:"Traduce circolari e comunicazioni per le famiglie non italofone in oltre 30 lingue, mantenendo il tono istituzionale.",
+     funz:["Traduzione in 30+ lingue","Mantenimento del tono istituzionale","Invio multicanale alle famiglie"],
+     ben:"Comunicazione inclusiva verso tutte le famiglie",forn:"Fornitore EdTech · SaaS UE",integra:["Registro elettronico","Sito d'istituto"]},
+  18:{long:"Propone le sostituzioni ottimali dei docenti assenti considerando disponibilità, materia e continuità didattica.",
+     funz:["Proposte di sostituzione ottimali","Considera disponibilità, materia e continuità","Notifica automatica ai docenti"],
+     ben:"Sostituzioni gestite in pochi minuti",forn:"Fornitore gestionale · SaaS UE",integra:["Registro elettronico"]},
+  19:{long:"Genera feedback personalizzato e costruttivo sugli elaborati, allineato agli obiettivi di apprendimento, con revisione del docente.",
+     funz:["Feedback personalizzato per studente","Allineamento agli obiettivi di apprendimento","Revisione finale del docente"],
+     ben:"Feedback più frequente e mirato",forn:"Fornitore EdTech · supervisione umana",integra:["Registro elettronico","Classroom / Teams"]},
+  20:{long:"Analizza gli apprendimenti a livello di istituto per individuare gap, punti di forza e azioni di miglioramento (RAV/PdM).",
+     funz:["Analisi degli apprendimenti per istituto e classe","Individuazione di gap e punti di forza","Supporto ad autovalutazione (RAV/PdM)"],
+     ben:"Azioni di miglioramento basate su evidenze",forn:"Partner di ricerca · dati aggregati e anonimizzati",integra:["SIDI","Registro elettronico"]},
+  21:{long:"Guida la compilazione di DPIA, registri dei trattamenti e checklist privacy per l'adozione degli strumenti AI in sicurezza.",
+     funz:["Compilazione guidata della DPIA","Registro dei trattamenti e checklist","Supporto al DPO nell'adozione degli strumenti"],
+     ben:"Adozione conforme e documentata degli strumenti AI",forn:"Fornitore legal-tech · SaaS UE",integra:["Export PDF/DOCX"]},
+  22:{long:"Percorsi laboratoriali su pensiero computazionale e uso consapevole dell'IA, con materiali pronti per studenti e docenti.",
+     funz:["Percorsi di coding e pensiero computazionale","Moduli di AI literacy e uso consapevole","Materiali pronti per studenti e docenti"],
+     ben:"Competenze digitali e uso critico dell'IA",forn:"Fornitore EdTech · materiali didattici open",integra:["Classroom / Teams"]}
+};
+
+/* ====== Stato ====== */
+let selected = new Set();
+let flagged = new Set();          // soluzioni segnalate al Dirigente (profilo Docente)
+/* Casella segnalazioni del Dirigente: soluzioni proposte da docenti e personale ATA */
+let inbox = [
+  {id:4,  from:"Prof.ssa Bianchi · Docente",             note:"Fondamentale per gli alunni con DSA durante le lezioni: continuiamo a usarla.", when:"2 giorni fa"},
+  {id:5,  from:"Prof. Verdi · Docente",                  note:"Ci fa risparmiare molte ore nella preparazione di verifiche ed esercizi.", when:"ieri"},
+  {id:8,  from:"Sig.ra Neri · Personale amministrativo", note:"Riduce molto le richieste allo sportello da parte delle famiglie.", when:"oggi"}
+];
+let inboxArchived = [];      // segnalazioni archiviate dal Dirigente (recuperabili)
+let inboxView = 'attive';    // 'attive' | 'archiviate'
+let activeAmb = "all";
+let searchText = "";
+let sortMode = "rilevanza";
+let budgetFilter = "all";
+let docView = "catalogo";          // vista dei profili operativi (Docente/ATA): 'catalogo' (segnala) | 'strumenti' (usa)
+/* Icona "aeroplanino di carta" = invio della segnalazione tramite portale */
+const PLANE = '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:2px" aria-hidden="true"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>';
+
+/* Le 6 soluzioni AI effettivamente disponibili nella scuola (unico universo del marketplace).
+   Ogni profilo vede solo quelle rivolte a lui; il Dirigente le vede tutte. */
+const DIRIGENTE_TOOLS = [1, 3, 4, 5, 8, 17];   // tutte le 6 disponibili
+/* Docente: didattica, inclusione, valutazione — Generatore materiali, Tutor AI, Inclusione BES/DSA, Traduttore */
+const DOCENTE_TOOLS = [5, 3, 4, 17];
+/* Personale amministrativo: segreteria e famiglie — Segreteria AI, ChatBot Scuola-Famiglia, Traduttore */
+const ATA_TOOLS = [1, 8, 17];
+/* Studente: supporto allo studio — Tutor AI, Traduttore */
+const STUDENTE_TOOLS = [3, 17];
+/* Genitore/Famiglia: comunicazione scuola-casa — ChatBot Scuola-Famiglia, Traduttore */
+const GENITORE_TOOLS = [8, 17];
+/* Profili "operativi" (docente/ATA): usano gli strumenti e segnalano al Dirigente */
+function toolListFor(p){ return p==='docente' ? DOCENTE_TOOLS : p==='ata' ? ATA_TOOLS : null; }
+function isToolProfile(){ return currentProfile==='docente' || currentProfile==='ata'; }
+/* Profili "vista" (studente/genitore): niente catalogo, solo le soluzioni a loro dedicate */
+function isViewProfile(){ return currentProfile==='studente' || currentProfile==='genitore'; }
+/* Sottoinsieme del catalogo mostrato per profilo. Il Dirigente vede tutte le 6 disponibili. */
+function catalogSubsetFor(p){
+  return p==='dirigente'? DIRIGENTE_TOOLS
+       : p==='docente'  ? DOCENTE_TOOLS
+       : p==='ata'      ? ATA_TOOLS
+       : p==='studente' ? STUDENTE_TOOLS
+       : p==='genitore' ? GENITORE_TOOLS
+       : DIRIGENTE_TOOLS;
+}
+/* Metadati dei tool per la workspace del Docente (placeholder + esempio + sintesi vocale) */
+const TOOL_META = {
+  5:{ph:"Es. \"La fotosintesi clorofilliana per la classe terza\"", sample:"La fotosintesi clorofilliana — classe terza, scuola secondaria di primo grado"},
+  3:{ph:"Scrivi la domanda o il dubbio dello studente…", sample:"Non ho capito la differenza tra area e perimetro di un rettangolo"},
+  4:{ph:"Incolla il testo da rendere accessibile per studenti BES/DSA…", sample:"La rivoluzione industriale trasformò radicalmente i sistemi produttivi europei tra il XVIII e il XIX secolo, introducendo la meccanizzazione e la produzione di fabbrica."},
+  12:{ph:"Incolla il testo da convertire in audio…", sample:"Domani ricordatevi di portare il materiale per l'attività di laboratorio di scienze.", speak:true},
+  11:{ph:"Incolla la risposta dello studente da valutare…", sample:"La Prima Guerra Mondiale scoppiò nel 1914 dopo l'attentato di Sarajevo e coinvolse le principali potenze europee."},
+  19:{ph:"Incolla l'elaborato dello studente per un feedback formativo…", sample:"Il tema dell'amicizia nel libro è molto importante perché i personaggi si aiutano nei momenti difficili."},
+  13:{ph:"Descrivi interessi e punti di forza dello studente…", sample:"Interessato a informatica e videogiochi, bravo in matematica, un po' timido nelle materie orali."},
+  1:{ph:"Incolla il testo della pratica o dell'istanza da gestire…", sample:"Richiesta di certificato di iscrizione per lo studente Mario Rossi, classe 2ªA, da presentare alla società sportiva."},
+  7:{ph:"Incolla il documento in ingresso da protocollare…", sample:"Nota dell'USR Lazio prot. 12345 relativa all'aggiornamento delle graduatorie provinciali per supplenze."},
+  8:{ph:"Scrivi la domanda tipica di una famiglia…", sample:"Quali sono le scadenze per l'iscrizione al prossimo anno e quali documenti servono?"},
+  16:{ph:"Descrivi il progetto o l'avviso da impostare…", sample:"Progetto PNRR per laboratori STEM: importo 30.000 €, durata 12 mesi, scuola secondaria di primo grado."},
+  21:{ph:"Descrivi il trattamento o lo strumento da valutare…", sample:"Adozione di un registro elettronico con notifiche via app alle famiglie e archiviazione dei dati su cloud UE."},
+  18:{ph:"Indica le assenze e i vincoli del giorno…", sample:"Prof. Bianchi assente domani (matematica, 3 ore in 3ªA). Docenti disponibili: Rossi (mattina), Verdi (pomeriggio)."}
+};
+
+/* ====== Navigazione ====== */
+function hideBars(){
+  document.getElementById('planBar').style.display='none';
+  const db=document.getElementById('docenteBar'); if(db) db.style.display='none';
+}
+/* Adatta l'interfaccia del catalogo al profilo attivo */
+function updateProfileUI(){
+  const inCatalog = document.getElementById('gaiaView').classList.contains('show');
+  const isTool = isToolProfile();
+  const isView = isViewProfile();
+  const isDir = currentProfile==='dirigente';
+  const strumenti = (isTool||isDir) && docView==='strumenti';   // "I miei strumenti"
+  const catalogo  = (isTool||isDir) && docView==='catalogo';    // "Catalogo soluzioni"
+  const toolCatalogo = isTool && docView==='catalogo';          // catalogo del docente/ATA (segnala)
+  const hideCatalogUI = isView || strumenti;                    // ricerca/filtri/nota nascosti in queste viste
+
+  document.getElementById('planBar').style.display = (inCatalog && isDir && catalogo) ? 'block' : 'none';
+  // Barra segnalazioni: solo nella vista Catalogo dei profili operativi
+  const db=document.getElementById('docenteBar'); if(db) db.style.display = (inCatalog && toolCatalogo) ? 'block' : 'none';
+
+  const bs=document.getElementById('budgetSelect'); if(bs) bs.style.display = (isDir && catalogo) ? '' : 'none';
+  // Snapshot budget/scuola: solo Dirigente nel tab Catalogo.
+  const sb=document.querySelector('.school-bar'); if(sb) sb.style.display = (isDir && catalogo) ? '' : 'none';
+  const ib=document.getElementById('instituteBanner'); if(ib) ib.style.display = isView ? 'block' : 'none';
+  // Funzione "catalogo" (ricerca, filtri, nota di conformità): assente in vista strumenti e per studenti/genitori.
+  const tb=document.querySelector('.toolbar'); if(tb) tb.style.display = hideCatalogUI ? 'none' : 'flex';
+  const ch=document.getElementById('chips'); if(ch) ch.style.display = hideCatalogUI ? 'none' : 'flex';
+  const cn=document.querySelector('.catalog-note'); if(cn) cn.style.display = hideCatalogUI ? 'none' : '';
+  const rc=document.getElementById('resultCount'); if(rc) rc.style.display = hideCatalogUI ? 'none' : '';
+  const vi=document.getElementById('viewIntro'); if(vi) vi.style.display = (isView || strumenti) ? 'block' : 'none';
+  if(toolCatalogo) renderDocenteBar();
+  if(isView || strumenti) setViewIntro();
+  renderViewSwitch();
+}
+/* Schede di navigazione (Dirigente: Catalogo · I miei strumenti · Panoramica · Segnalazioni) */
+function renderViewSwitch(){
+  const isDir = currentProfile==='dirigente';
+  const isTool = isToolProfile();
+  const show = isDir || isTool;
+  let tabs = `<button class="vs-btn ${docView==='catalogo'?'active':''}" onclick="switchTab('catalogo')">🗂️ Catalogo soluzioni</button>`
+           + `<button class="vs-btn ${docView==='strumenti'?'active':''}" onclick="switchTab('strumenti')">🧰 I miei strumenti</button>`;
+  if(isDir){
+    tabs += `<button class="vs-btn ${docView==='panoramica'?'active':''}" onclick="switchTab('panoramica')">🏫 Panoramica scuola</button>`
+          + `<button class="vs-btn vs-inbox" onclick="switchTab('inbox')" title="Segnalazioni dal personale">📥 Segnalazioni <span class="vs-badge ${inbox.length===0?'zero':''}">${inbox.length}</span></button>`;
+  }
+  ['viewSwitch','viewSwitchSchool'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){ el.innerHTML=tabs; el.style.display = show ? 'flex' : 'none'; }
+  });
+}
+function switchTab(tab){
+  if(tab==='inbox'){ openInbox(); return; }
+  docView = tab;
+  if(tab==='panoramica'){ goSchool(); }
+  else { goGaia(); }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function setViewIntro(){
+  const vi=document.getElementById('viewIntro'); if(!vi) return;
+  if(docView==='strumenti'){
+    if(currentProfile==='dirigente'){
+      vi.innerHTML = '<h2>I tuoi strumenti AI</h2><p>Le soluzioni di Intelligenza Artificiale attive nella tua scuola: aprile e provale in prima persona, come le vivono docenti e studenti.</p>';
+      return;
+    }
+    const scope = currentProfile==='ata'
+      ? 'per la segreteria e le attività amministrative'
+      : 'per la didattica, l\'inclusione, la valutazione e l\'orientamento';
+    vi.innerHTML = '<h2>I tuoi strumenti AI</h2><p>Le soluzioni di Intelligenza Artificiale attive nella tua scuola che puoi usare direttamente '+scope+'. Cliccale per aprirle e usarle.</p>';
+    return;
+  }
+  vi.innerHTML = currentProfile==='studente'
+    ? '<h2>Le soluzioni AI per te</h2><p>Gli strumenti di Intelligenza Artificiale che la tua scuola mette a tua disposizione per studiare, recuperare e orientarti. Cliccali per aprirli e usarli.</p>'
+    : '<h2>Le soluzioni AI per la tua famiglia</h2><p>Gli strumenti di Intelligenza Artificiale attivi nella scuola, pensati per le famiglie: informazioni, comunicazioni scuola-casa e supporto. Cliccali per aprirli e usarli.</p>';
+}
+function goGaiaIntro(){
+  document.getElementById('homeView').classList.add('hide');
+  document.getElementById('schoolView').classList.remove('show');
+  document.getElementById('gaiaView').classList.remove('show');
+  document.getElementById('gaiaIntroView').classList.add('show');
+  hideBars();
+  document.getElementById('navGaia').classList.add('active');
+  window.scrollTo(0,0);
+}
+function goGaia(){
+  if(docView==='panoramica') docView='catalogo';   // il catalogo/strumenti vivono in gaiaView
+  document.getElementById('homeView').classList.add('hide');
+  document.getElementById('gaiaIntroView').classList.remove('show');
+  document.getElementById('schoolView').classList.remove('show');
+  document.getElementById('gaiaView').classList.add('show');
+  document.getElementById('navGaia').classList.add('active');
+  updateProfileUI();
+  renderChips();
+  renderGrid();
+  window.scrollTo(0,0);
+}
+function goHome(){
+  document.getElementById('homeView').classList.remove('hide');
+  document.getElementById('gaiaIntroView').classList.remove('show');
+  document.getElementById('gaiaView').classList.remove('show');
+  document.getElementById('schoolView').classList.remove('show');
+  hideBars();
+  document.getElementById('navGaia').classList.remove('active');
+  window.scrollTo(0,0);
+}
+function goSchool(){
+  docView='panoramica';
+  document.getElementById('homeView').classList.add('hide');
+  document.getElementById('gaiaIntroView').classList.remove('show');
+  document.getElementById('gaiaView').classList.remove('show');
+  document.getElementById('schoolView').classList.add('show');
+  hideBars();
+  document.getElementById('navGaia').classList.add('active');
+  renderSchool();
+  renderViewSwitch();
+  window.scrollTo(0,0);
+}
+
+/* ====== Profili di accesso (profilazione UNICA) ====== */
+const PROFILI = {
+  dirigente:{label:'Dirigente scolastico', ctx:'Vista governance: scegli, acquista e monitora le soluzioni AI dell\'istituto entro il budget assegnato.'},
+  docente:{label:'Docente', ctx:'Vista didattica: usa gli strumenti AI attivati dalla scuola per lezioni, inclusione, valutazione e recupero.'},
+  ata:{label:'Personale amministrativo', ctx:'Vista amministrativa: soluzioni AI per segreteria, protocollo e automazione dei processi.'},
+  studente:{label:'Studente', ctx:'Vista studente: tutor intelligenti, supporto allo studio e strumenti di orientamento resi disponibili dalla scuola.'},
+  genitore:{label:'Genitore / Famiglia', ctx:'Vista famiglia: trasparenza sulle soluzioni AI attive e gestione dei consensi per i figli.'}
+};
+let currentProfile = 'dirigente';
+function applyProfile(){
+  const pr = PROFILI[currentProfile]; if(!pr) return;
+  const chip = document.getElementById('profileChip');
+  if(chip) chip.textContent = '👤 ' + pr.label;
+  const ctx = document.getElementById('profileCtx');
+  if(ctx) ctx.innerHTML = '<span class="pc-ic">👤</span><span>Accesso come <b>'+pr.label+'</b> — '+pr.ctx+'</span>';
+}
+function goGaiaAs(p){
+  currentProfile = p;
+  applyProfile();
+  // stato pulito ad ogni accesso: nessun filtro residuo dal profilo precedente
+  activeAmb='all'; searchText=''; sortMode='rilevanza'; budgetFilter='all'; docView='catalogo';
+  const si=document.getElementById('searchInput'); if(si) si.value='';
+  renderChips();
+  goGaia();
+  const pr = PROFILI[p];
+  if(pr) toast('Accesso effettuato come '+pr.label+' (demo)');
+}
+function toggleLogin(e){
+  e.stopPropagation();
+  document.getElementById('loginMenu').classList.toggle('open');
+}
+function pickProfile(p){
+  const pr = PROFILI[p]; if(!pr) return;
+  currentProfile = p;
+  applyProfile();
+  document.getElementById('loginMenu').classList.remove('open');
+  document.getElementById('loginToggle').innerHTML = '👤 '+pr.label+' ▾';
+  const hint = document.getElementById('introAccessHint'); if(hint) hint.style.display='none';
+  const cta = document.getElementById('introAccessCta'); if(cta) cta.style.display='';
+  document.getElementById('introCtaLabel').textContent = 'Accesso come '+pr.label;
+  document.getElementById('introAccessDesc').textContent = pr.ctx;
+  // Se sono già dentro la piattaforma, cambio profilo al volo
+  const inApp = document.getElementById('gaiaView').classList.contains('show') || document.getElementById('schoolView').classList.contains('show');
+  if(inApp){ goGaiaAs(p); return; }
+  toast('Profilo selezionato: '+pr.label);
+}
+function enterAs(){
+  goGaiaAs(currentProfile || 'dirigente');
+}
+function logout(){
+  selected.clear(); flagged.clear();
+  currentProfile='dirigente';
+  const m=document.getElementById('loginMenu'); if(m) m.classList.remove('open');
+  document.getElementById('loginToggle').innerHTML='Accedi ▾';
+  const hint=document.getElementById('introAccessHint'); if(hint) hint.style.display='';
+  const cta=document.getElementById('introAccessCta'); if(cta) cta.style.display='none';
+  const desc=document.getElementById('introAccessDesc'); if(desc) desc.textContent='';
+  hideBars();
+  goGaiaIntro();
+  toast('Sei uscito dall\'accesso');
+}
+document.addEventListener('click',()=>{ const m=document.getElementById('loginMenu'); if(m) m.classList.remove('open'); });
+
+/* ====== Helpers ====== */
+const eur = n => "€" + Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,".");
+function stars(r){
+  const full = Math.round(r);
+  return "★".repeat(full) + "☆".repeat(5-full);
+}
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+/* ====== Render chips ====== */
+function profileUniverseIds(){
+  if(isViewProfile()) return catalogSubsetFor(currentProfile) || [];
+  if(docView==='strumenti'){
+    if(currentProfile==='dirigente') return ACTIVE.map(a=>a.id);
+    if(isToolProfile()) return toolListFor(currentProfile)||[];
+  }
+  return SOLUTIONS.map(s=>s.id);   // catalogo: tutte le 22 (tutti gli ambiti)
+}
+function renderChips(){
+  const c=document.getElementById('chips');
+  // Mostra solo gli ambiti effettivamente presenti tra le soluzioni visibili al profilo
+  const ambSet=new Set(profileUniverseIds().map(id=>{const s=SOLUTIONS.find(x=>x.id===id);return s&&s.amb;}).filter(Boolean));
+  let html = `<button class="chip ${activeAmb==='all'?'active':''}" onclick="setAmb('all')">Tutti gli ambiti</button>`;
+  for(const [k,v] of Object.entries(AMBITI)){
+    if(!ambSet.has(k)) continue;
+    html += `<button class="chip ${activeAmb===k?'active':''}" onclick="setAmb('${k}')"><span class="dotc" style="background:${v.color}"></span>${v.label}</button>`;
+  }
+  c.innerHTML=html;
+}
+function setAmb(k){ activeAmb=k; renderChips(); renderGrid(); }
+
+/* ====== Filtri + sort ====== */
+function currentTotal(){ return [...selected].reduce((s,id)=>s+SOLUTIONS.find(x=>x.id===id).costo,0); }
+function getFiltered(){
+  const residuo = BUDGET_LIBERO - currentTotal();
+  let base = SOLUTIONS;
+  // Catalogo soluzioni: tutte le 22 (Dirigente seleziona, Docente/ATA segnalano).
+  // Restano ristrette: "I miei strumenti" (attive / curate) e le viste Studente/Genitore.
+  let tools = null;
+  if(isViewProfile()){
+    tools = catalogSubsetFor(currentProfile);
+  } else if(docView==='strumenti'){
+    if(currentProfile==='dirigente') tools = ACTIVE.map(a=>a.id);
+    else if(isToolProfile()) tools = toolListFor(currentProfile);
+  }
+  if(tools){
+    base = tools.map(id=>SOLUTIONS.find(s=>s.id===id)).filter(Boolean);
+  }
+  let list = base.filter(s=>{
+    if(activeAmb!=='all' && s.amb!==activeAmb) return false;
+    if(searchText){
+      const q=searchText.toLowerCase();
+      if(!(s.nome.toLowerCase().includes(q)||s.desc.toLowerCase().includes(q)||AMBITI[s.amb].label.toLowerCase().includes(q))) return false;
+    }
+    if(budgetFilter==='fit' && s.costo>Math.max(residuo,0) && !selected.has(s.id)) return false;
+    if(budgetFilter==='lt3' && s.costo>=3000) return false;
+    if(budgetFilter==='lt5' && s.costo>=5000) return false;
+    return true;
+  });
+  const sorters={
+    'rilevanza':(a,b)=>b.adoz*b.rating-a.adoz*a.rating,
+    'costo-asc':(a,b)=>a.costo-b.costo,
+    'costo-desc':(a,b)=>b.costo-a.costo,
+    'rating':(a,b)=>b.rating-a.rating,
+    'adozioni':(a,b)=>b.adoz-a.adoz
+  };
+  list.sort(sorters[sortMode]);
+  // Il Traduttore (unico strumento funzionante) sempre in prima posizione nelle viste d'uso
+  const pinTranslator = isViewProfile()
+    || ((currentProfile==='dirigente' || isToolProfile()) && docView==='strumenti');
+  if(pinTranslator){
+    const i=list.findIndex(s=>s.id===17);
+    if(i>0){ const [t]=list.splice(i,1); list.unshift(t); }
+  }
+  return list;
+}
+
+/* ====== Render grid ====== */
+function renderGrid(){
+  const list=getFiltered();
+  const grid=document.getElementById('grid');
+  const isDoc = isToolProfile();
+  const isView = isViewProfile();
+  const isDir = currentProfile==='dirigente';
+  const strumenti = (isDoc||isDir) && docView==='strumenti';
+  const toolCatalogo  = isDoc && docView==='catalogo';
+  const activeSet = new Set(ACTIVE.map(a=>a.id));
+  document.getElementById('resultCount').innerHTML = toolCatalogo
+    ? `<b>${list.length}</b> soluzioni AI a catalogo · segnala al Dirigente quelle utili${activeAmb!=='all'?' · ambito <b>'+AMBITI[activeAmb].label+'</b>':''}`
+    : `<b>${list.length}</b> soluzioni AI selezionate e validate dal MIM${activeAmb!=='all'?' · ambito <b>'+AMBITI[activeAmb].label+'</b>':''}`;
+  grid.innerHTML = list.map(s=>{
+    const amb=AMBITI[s.amb];
+    const sel=selected.has(s.id);
+    if(isView){
+      const forWhom = currentProfile==='studente' ? 'per lo studio, il recupero e l\'orientamento' : 'per informazioni, comunicazioni e supporto alle famiglie';
+      return `<div class="card view" onclick="openDetail(${s.id})" title="Scopri e apri la soluzione">
+        <div class="card-top" style="background:${amb.color}"></div>
+        <div class="card-inner">
+          <span class="card-cat" style="color:${amb.color};background:${amb.color}1a">${amb.label}</span>
+          <h3>${s.nome}</h3>
+          <div class="desc">${s.desc}</div>
+          <div class="badges">
+            <span class="seal" title="Soluzione validata dal MIM · conforme a GDPR e AI Act">✓ Validata MIM</span>
+            <span class="tool-status active">● Disponibile nella tua scuola</span>
+          </div>
+          <div class="card-more">Uno strumento ${forWhom}</div>
+          <div class="card-footer col">
+            <button class="btn-tool ${s.id===17?'':'off'}" onclick="event.stopPropagation();openTool(${s.id})" title="${s.id===17?'Apri e usa la soluzione':'Strumento in arrivo'}">${s.id===17?'▶ Apri strumento':'🚧 In standby'}</button>
+          </div>
+        </div>
+      </div>`;
+    }
+    if(strumenti){
+      // Vista "I miei strumenti": si aprono e si usano direttamente le soluzioni attive
+      const working = s.id===17;   // in questa demo funziona solo il Traduttore
+      const statusTag = working
+        ? `<span class="tool-status active">● Attivo · funzionante</span>`
+        : `<span class="tool-status todo">● Attivo · in standby</span>`;
+      return `<div class="card" onclick="openTool(${s.id})" title="${working?'Apri e usa lo strumento':'Strumento in standby'}">
+        <div class="card-top" style="background:${amb.color}"></div>
+        <div class="card-inner">
+          <span class="card-cat" style="color:${amb.color};background:${amb.color}1a">${amb.label}</span>
+          <h3>${s.nome}</h3>
+          <div class="desc">${s.desc}</div>
+          <div class="meta">
+            <span>Formazione: <b>${s.ore}h</b></span>
+            <span class="stars">${stars(s.rating)} <b style="color:var(--ink)">${s.rating.toFixed(1)}</b></span>
+          </div>
+          <div class="badges">
+            <span class="seal" title="Soluzione validata dal MIM · conforme a GDPR e AI Act">✓ Validata MIM</span>
+            ${statusTag}
+          </div>
+          <div class="card-more">${working?'Apri lo spazio di lavoro →':'Disponibile a breve'}</div>
+          <div class="card-footer col">
+            <button class="btn-tool ${working?'':'off'}" onclick="event.stopPropagation();openTool(${s.id})" title="${working?'Usa lo strumento':'Strumento in arrivo'}">${working?'▶ Apri strumento':'🚧 In standby'}</button>
+          </div>
+        </div>
+      </div>`;
+    }
+    if(toolCatalogo){
+      // Vista "Catalogo": come il Dirigente, ma il docente/ATA può segnalare la soluzione da valutare
+      const isFlag=flagged.has(s.id);
+      const isActive=activeSet.has(s.id);
+      const statusTag = isActive
+        ? `<span class="tool-status active">● Già attiva nella tua scuola</span>`
+        : ``;
+      return `<div class="card ${isFlag?'flagged':''}" onclick="openDetail(${s.id})" title="Apri i dettagli della soluzione">
+        <div class="card-top" style="background:${amb.color}"></div>
+        <div class="card-inner">
+          <span class="livello-tag">Livello ${s.liv}</span>
+          <span class="card-cat" style="color:${amb.color};background:${amb.color}1a">${amb.label}</span>
+          <h3>${s.nome}</h3>
+          <div class="desc">${s.desc}</div>
+          <div class="meta">
+            <span>Formazione: <b>${s.ore}h</b></span>
+            <span>Adottata da <b>${s.adoz}</b> scuole</span>
+            <span class="stars">${stars(s.rating)} <b style="color:var(--ink)">${s.rating.toFixed(1)}</b></span>
+          </div>
+          <div class="badges">
+            <span class="seal" title="Soluzione validata dal MIM secondo le Linee guida · conforme a GDPR e AI Act">✓ Validata MIM</span>
+            <span class="risk risk-${RISCHIO[s.id]}" title="${RISK_TITLE[RISCHIO[s.id]]}">AI Act: rischio ${RISCHIO[s.id]}</span>
+            ${statusTag}
+          </div>
+          ${isActive?`<div class="adopted-note">✓ Soluzione già adottata dalla scuola — non è necessario segnalarla al Dirigente.</div>`:`<div class="card-more">Dettagli soluzione →</div>`}
+          <div class="card-footer">
+            <div class="price">${eur(s.costo)}<small>/anno</small></div>
+            ${isActive
+              ? `<button class="btn-flag is-adopted" disabled title="Soluzione già adottata dalla scuola">✓ Già adottata</button>`
+              : `<button class="btn-flag ${isFlag?'on':''}" onclick="event.stopPropagation();toggleFlag(${s.id})">${isFlag?'✓ Segnalata':PLANE+' Segnala al Dirigente'}</button>`}
+          </div>
+        </div>
+      </div>`;
+    }
+    const isAdopted=activeSet.has(s.id);
+    return `<div class="card ${sel?'selected':''} ${isAdopted?'adopted':''}" onclick="openDetail(${s.id})" title="Apri i dettagli della soluzione">
+      <div class="card-top" style="background:${amb.color}"></div>
+      <div class="card-inner">
+        <span class="livello-tag">Livello ${s.liv}</span>
+        <span class="card-cat" style="color:${amb.color};background:${amb.color}1a">${amb.label}</span>
+        <h3>${s.nome}</h3>
+        <div class="desc">${s.desc}</div>
+        <div class="meta">
+          <span>Formazione: <b>${s.ore}h</b></span>
+          <span>Adottata da <b>${s.adoz}</b> scuole</span>
+          <span class="stars">${stars(s.rating)} <b style="color:var(--ink)">${s.rating.toFixed(1)}</b></span>
+        </div>
+        <div class="badges">
+          <span class="seal" title="Soluzione validata dal MIM secondo le Linee guida · conforme a GDPR e AI Act">✓ Validata MIM</span>
+          <span class="risk risk-${RISCHIO[s.id]}" title="${RISK_TITLE[RISCHIO[s.id]]}">AI Act: rischio ${RISCHIO[s.id]}</span>
+          ${isAdopted?`<span class="tool-status active">● Già attiva nella tua scuola</span>`:``}
+        </div>
+        ${isAdopted?`<div class="adopted-note">✓ Soluzione già adottata dalla scuola — è già attiva e non va aggiunta di nuovo al piano.</div>`:`<div class="card-more">Dettagli soluzione →</div>`}
+        <div class="card-footer">
+          <div class="price">${eur(s.costo)}<small>/anno</small></div>
+          ${isAdopted
+            ? `<button class="btn-add is-adopted" disabled title="Soluzione già adottata dalla scuola">✓ Già adottata</button>`
+            : `<button class="btn-add" onclick="event.stopPropagation();toggle(${s.id})">${sel?'✓ Nel piano':'+ Aggiungi al piano'}</button>`}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ====== Selezione (Dirigente) ====== */
+function toggle(id){
+  const s=SOLUTIONS.find(x=>x.id===id);
+  if(selected.has(id)){ selected.delete(id); toast('Rimossa dal piano: '+s.nome); }
+  else{ selected.add(id); toast('Aggiunta al piano: '+s.nome); }
+  renderGrid(); renderPlan();
+}
+
+/* ====== Segnalazioni (Docente) ====== */
+function toggleFlag(id){
+  const s=SOLUTIONS.find(x=>x.id===id);
+  if(flagged.has(id)){ flagged.delete(id); toast('Segnalazione rimossa: '+s.nome); }
+  else{ flagged.add(id); toast('Segnalato al Dirigente: '+s.nome); }
+  renderGrid(); renderDocenteBar();
+}
+function toggleFlagFromModal(id){ toggleFlag(id); openDetail(id); }
+function resetFlags(){
+  if(flagged.size===0){ toast('Nessuna segnalazione da azzerare'); return; }
+  const n=flagged.size; flagged.clear();
+  renderGrid(); renderDocenteBar();
+  toast('Segnalazioni azzerate ('+n+')');
+}
+function sendFlags(){
+  if(flagged.size===0){ toast('Segnala almeno uno strumento prima di inviare'); return; }
+  const label = currentProfile==='ata' ? 'Personale amministrativo' : 'Docente';
+  flagged.forEach(id=>{
+    if(!inbox.some(x=>x.id===id)) inbox.push({id, from:label, note:'', when:'ora'});
+  });
+  updateInboxCount();
+  toast(flagged.size+' segnalazion'+(flagged.size===1?'e inviata':'i inviate')+' al Dirigente Scolastico (demo)');
+}
+
+/* ====== Casella segnalazioni (Dirigente) ====== */
+function updateInboxCount(){ renderViewSwitch(); }
+function openInbox(){ inboxView='attive'; renderInbox(); document.getElementById('inboxModal').classList.add('show'); document.body.style.overflow='hidden'; }
+function closeInbox(){ document.getElementById('inboxModal').classList.remove('show'); document.body.style.overflow=''; }
+function setInboxView(v){ inboxView=v; renderInbox(); }
+function renderInbox(){
+  const lead=document.getElementById('inboxLead');
+  const listEl=document.getElementById('inboxList');
+  // aggiorna le tab
+  document.getElementById('ibCountA').textContent=inbox.length;
+  document.getElementById('ibCountB').textContent=inboxArchived.length;
+  document.getElementById('ibtabA').classList.toggle('on', inboxView==='attive');
+  document.getElementById('ibtabB').classList.toggle('on', inboxView==='archiviate');
+
+  const list = inboxView==='attive' ? inbox : inboxArchived;
+  if(inboxView==='attive'){
+    lead.innerHTML = inbox.length
+      ? `<b>${inbox.length}</b> soluzion${inbox.length===1?'e proposta':'i proposte'} dal personale della scuola. Valutane l'adozione e aggiungile al tuo piano, oppure archiviale.`
+      : 'Nessuna segnalazione da valutare al momento.';
+  } else {
+    lead.innerHTML = inboxArchived.length
+      ? `<b>${inboxArchived.length}</b> segnalazion${inboxArchived.length===1?'e archiviata':'i archiviate'}. Puoi ripristinarle nella casella "Da valutare" in qualsiasi momento.`
+      : 'Nessuna segnalazione archiviata.';
+  }
+  if(list.length===0){
+    listEl.innerHTML = inboxView==='attive'
+      ? '<div class="inbox-empty">Le soluzioni proposte da docenti e personale amministrativo compariranno qui, pronte per essere valutate e aggiunte al piano.</div>'
+      : '<div class="inbox-empty">Le segnalazioni che archivi finiscono qui e restano recuperabili: potrai riportarle tra quelle "Da valutare" con un clic.</div>';
+    return;
+  }
+  listEl.innerHTML=list.map(it=>{
+    const s=SOLUTIONS.find(x=>x.id===it.id); if(!s) return '';
+    const amb=AMBITI[s.amb];
+    const sel=selected.has(s.id);
+    const active=ACTIVE.some(a=>a.id===s.id);
+    const isArch = inboxView==='archiviate';
+    return `<div class="inbox-item">
+      <span class="ii-dot" style="background:${amb.color}"></span>
+      <div class="ii-main">
+        <div class="ii-name">${s.nome} <span class="ii-cat" style="color:${amb.color};background:${amb.color}1a">${amb.label}</span></div>
+        <div class="ii-from">Segnalata da <b>${it.from}</b> · ${it.when}</div>
+        ${it.note?`<div class="ii-note">“${it.note}”</div>`:''}
+        ${isArch?`<div class="ii-arch-when">🗄 Archiviata ${it.archWhen||'poco fa'}</div>`:''}
+      </div>
+      <div class="ii-actions">
+        <div class="ii-price">${eur(s.costo)}<small>/anno</small></div>
+        ${active
+          ? `<span class="ii-active">● Già attiva</span>`
+          : `<button class="btn-add ${sel?'in':''}" onclick="inboxAdd(${s.id})">${sel?'✓ Nel piano':'+ Aggiungi al piano'}</button>`}
+        ${isArch
+          ? `<button class="ii-restore" onclick="inboxRestore(${s.id})" title="Riporta tra le segnalazioni da valutare">↩ Ripristina</button>`
+          : `<button class="ii-x" onclick="inboxArchive(${s.id})" title="Sposta nell'archivio (recuperabile)">Archivia</button>`}
+      </div>
+    </div>`;
+  }).join('');
+}
+function inboxAdd(id){ toggle(id); renderInbox(); }
+function inboxArchive(id){
+  const i=inbox.findIndex(x=>x.id===id); if(i<0) return;
+  const [it]=inbox.splice(i,1);
+  it.archWhen='oggi';
+  inboxArchived.unshift(it);
+  renderInbox(); updateInboxCount();
+  toast('Segnalazione archiviata · la trovi in "Archiviate"');
+}
+function inboxRestore(id){
+  const i=inboxArchived.findIndex(x=>x.id===id); if(i<0) return;
+  const [it]=inboxArchived.splice(i,1);
+  delete it.archWhen;
+  inbox.unshift(it);
+  renderInbox(); updateInboxCount();
+  toast('Segnalazione ripristinata in "Da valutare"');
+}
+function renderDocenteBar(){
+  const list=toolListFor(currentProfile)||[];
+  const c=document.getElementById('dbCount'); if(c) c.textContent=flagged.size;
+  const t=document.getElementById('dbTools'); if(t) t.textContent=list.length;
+  const send=document.getElementById('dbSend'); if(send) send.disabled = flagged.size===0;
+  const h=document.getElementById('dbHint');
+  if(h){
+    h.innerHTML = currentProfile==='ata'
+      ? 'Come personale amministrativo non gestisci il budget: <b>segnala al Dirigente Scolastico</b> gli strumenti utili alla segreteria. Le soluzioni già attive le usi in <b>«I miei strumenti»</b>.'
+      : 'Come docente non gestisci il budget: <b>segnala al Dirigente Scolastico</b> gli strumenti che ritieni utili. Le soluzioni già attive le usi in <b>«I miei strumenti»</b>.';
+  }
+}
+
+/* ====== Deep dive (pop-up) ====== */
+function openDetail(id){
+  const s=SOLUTIONS.find(x=>x.id===id); const d=DETAILS[id]; const amb=AMBITI[s.amb];
+  const rk=RISCHIO[id]; const sel=selected.has(id);
+  const isAdopted=ACTIVE.some(a=>a.id===id);   // soluzione già adottata dalla scuola
+  document.getElementById('detailBody').innerHTML = `
+    <div class="md-top" style="background:${amb.color}"></div>
+    <div class="md-pad">
+      <div class="md-tags">
+        <span class="card-cat" style="color:${amb.color};background:${amb.color}1a">${amb.label}</span>
+        <span class="livello-tag" style="position:static">Livello ${s.liv}</span>
+        <span class="seal">✓ Validata MIM</span>
+        <span class="risk risk-${rk}">AI Act: rischio ${rk}</span>
+      </div>
+      <h2 class="md-title" id="mdTitle">${s.nome}</h2>
+      <div class="md-desc">${d.long}</div>
+      <div class="md-kpis">
+        ${(isToolProfile()||isViewProfile()) ? '' : `<div class="md-kpi"><div class="kk">Costo</div><div class="kv">${eur(s.costo)}<small style="font-size:11px;color:var(--muted)">/anno</small></div></div>`}
+        <div class="md-kpi"><div class="kk">Formazione</div><div class="kv">${s.ore} h</div></div>
+        <div class="md-kpi"><div class="kk">Adozioni</div><div class="kv">${s.adoz}</div></div>
+        <div class="md-kpi"><div class="kk">Valutazione</div><div class="kv">${s.rating.toFixed(1)} <span style="color:#f5a623;font-size:13px">${stars(s.rating)}</span></div></div>
+      </div>
+      <div class="md-grid">
+        <div class="md-sec"><h4>Cosa fa</h4><ul class="md-list">${d.funz.map(f=>`<li>${f}</li>`).join('')}</ul></div>
+        <div>
+          <div class="md-sec"><h4>Beneficio atteso</h4><div class="md-ben">${d.ben}</div></div>
+          <div class="md-sec"><h4>Per chi</h4><div class="md-plain">${DEST[s.amb]}</div></div>
+          <div class="md-sec"><h4>Integrazioni</h4><div class="md-chips">${d.integra.map(i=>`<span class="md-chip">${i}</span>`).join('')}</div></div>
+        </div>
+      </div>
+      <div class="md-sec"><h4>Dati &amp; governance</h4><div class="md-gov risk-${rk}">${GOV_TEXT[rk]}</div></div>
+      <div class="md-foot">
+        ${isToolProfile()
+          ? `<div><div class="md-price" style="font-size:16px">Strumento AI · validato MIM</div><div class="md-forn">${d.forn}</div></div>
+             ${isAdopted?`<div class="adopted-note" style="margin:0 0 4px">✓ Soluzione già adottata dalla scuola — non è necessario segnalarla al Dirigente.</div>`:``}
+             <div style="display:flex;gap:10px;flex-wrap:wrap">
+               <button class="btn-add-lg" style="background:${s.id===17?'#0b9b77':'#8a94a6'}" onclick="closeDetail();openTool(${s.id})">${s.id===17?'▶ Apri strumento':'🚧 In standby'}</button>
+               ${isAdopted
+                 ? `<button class="btn-add-lg is-adopted" disabled title="Soluzione già adottata dalla scuola">✓ Già adottata</button>`
+                 : `<button class="btn-add-lg ${flagged.has(id)?'on':''}" style="${flagged.has(id)?'':'background:#e08a00'}" onclick="toggleFlagFromModal(${s.id})">${flagged.has(id)?'✓ Segnalato al Dirigente':PLANE+' Segnala al Dirigente'}</button>`}
+             </div>`
+          : isViewProfile()
+          ? `<div><div class="md-price" style="font-size:16px">Disponibile nella tua scuola</div><div class="md-forn">${d.forn}</div></div>
+             <button class="btn-add-lg" style="background:${s.id===17?'#0b9b77':'#8a94a6'}" onclick="closeDetail();openTool(${s.id})">${s.id===17?'▶ Apri strumento':'🚧 In standby'}</button>`
+          : `<div><div class="md-price">${eur(s.costo)} <small>/anno</small></div><div class="md-forn">${d.forn}</div></div>
+             ${isAdopted
+               ? `<div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+                    <div class="adopted-note" style="margin:0">✓ Soluzione già adottata dalla scuola — è già attiva e non va aggiunta di nuovo al piano.</div>
+                    <button class="btn-add-lg is-adopted" disabled title="Soluzione già adottata dalla scuola">✓ Già adottata</button>
+                  </div>`
+               : `<button class="btn-add-lg ${sel?'on':''}" onclick="toggleFromModal(${s.id})">${sel?'✓ Nel piano di adozione':'+ Aggiungi al piano'}</button>`}`}
+      </div>
+    </div>`;
+  const ov=document.getElementById('detailModal');
+  ov.classList.add('show'); document.body.style.overflow='hidden';
+}
+function closeDetail(){
+  document.getElementById('detailModal').classList.remove('show');
+  document.body.style.overflow='';
+}
+function toggleFromModal(id){ toggle(id); openDetail(id); }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeDetail(); closePdf(); closeTranslator(); closeTool(); closeInbox(); closeStandby(); } });
+
+/* ====== Piano di adozione ====== */
+function renderPlan(){
+  const total=currentTotal();
+  const residuo=BUDGET_LIBERO-total;
+  const ore=[...selected].reduce((s,id)=>s+SOLUTIONS.find(x=>x.id===id).ore,0);
+  const doc=[...selected].reduce((s,id)=>s+SOLUTIONS.find(x=>x.id===id).doc,0);
+  document.getElementById('pmCount').textContent=selected.size;
+  document.getElementById('pmTotal').textContent=eur(total);
+  const res=document.getElementById('pmResiduo');
+  res.textContent=eur(residuo);
+  res.className='v '+(residuo<0?'over':'ok');
+  document.getElementById('pmOre').textContent=ore+'h';
+  document.getElementById('pmDoc').textContent=doc;
+  const pct=Math.min(100,Math.round(total/BUDGET_LIBERO*100));
+  const fill=document.getElementById('pmFill');
+  fill.style.width=pct+'%';
+  fill.classList.toggle('over',residuo<0);
+  document.getElementById('pmLabel').textContent=`${eur(total)} di ${eur(BUDGET_LIBERO)} quota libera impegnati (${Math.round(total/BUDGET_LIBERO*100)}%)`;
+  document.getElementById('pmWarn').style.display=residuo<0?'inline':'none';
+}
+
+function resetPlan(){
+  if(selected.size===0){ toast('Il piano è già vuoto'); return; }
+  const n=selected.size;
+  selected.clear();
+  renderGrid(); renderPlan();
+  toast('Piano svuotato ('+n+(n===1?' soluzione rimossa':' soluzioni rimosse')+')');
+}
+
+function composePath(){
+  if(selected.size===0){ toast('Seleziona almeno una soluzione dal catalogo'); return; }
+  const names=[...selected].map(id=>SOLUTIONS.find(x=>x.id===id).nome).join(', ');
+  toast('Percorso composto: '+selected.size+' soluzioni ('+names+')');
+}
+function downloadProject(){
+  if(selected.size===0){ toast('Seleziona almeno una soluzione dal catalogo'); return; }
+  if(!window.jspdf || !window.jspdf.jsPDF){ toast('Generatore PDF non disponibile (connessione richiesta)'); return; }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({unit:'pt', format:'a4'});
+  const W = doc.internal.pageSize.getWidth();
+  const H = doc.internal.pageSize.getHeight();
+  const navy=[18,35,92], blue=[44,90,208], gray=[90,102,117], green=[11,155,119];
+  const M=40;
+
+  const rows=[...selected].map(id=>SOLUTIONS.find(x=>x.id===id));
+  const total=rows.reduce((s,r)=>s+r.costo,0);
+  const ore=rows.reduce((s,r)=>s+r.ore,0);
+  const docenti=rows.reduce((s,r)=>s+r.doc,0);
+  const residuo=BUDGET_LIBERO-total;
+  const oggi=new Date().toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'});
+
+  // ---- Intestazione ----
+  doc.setFillColor(...navy); doc.rect(0,0,W,72,'F');
+  doc.setTextColor(255,255,255);
+  doc.setFont('helvetica','bold'); doc.setFontSize(22); doc.text('G.A.I.A.', M, 34);
+  doc.setFont('helvetica','normal'); doc.setFontSize(10);
+  doc.text('Gestione e Apprendimento con Intelligenza Artificiale', M, 52);
+  doc.setFontSize(9);
+  doc.text("Ministero dell'Istruzione e del Merito", W-M, 30, {align:'right'});
+  doc.text('Catalogo Nazionale Soluzioni AI · integrato in UNICA', W-M, 44, {align:'right'});
+
+  // ---- Titolo documento ----
+  let y=104;
+  doc.setTextColor(...navy); doc.setFont('helvetica','bold'); doc.setFontSize(16);
+  doc.text('Progetto di adozione soluzioni AI', M, y);
+  doc.setFont('helvetica','normal'); doc.setFontSize(10.5); doc.setTextColor(...gray);
+  y+=18; doc.text('Proposta per il Consiglio di Istituto', M, y);
+
+  // ---- Box scuola ----
+  y+=18;
+  doc.setDrawColor(226,229,240); doc.setFillColor(245,247,251);
+  doc.roundedRect(M, y, W-2*M, 68, 6, 6, 'FD');
+  doc.setTextColor(...navy); doc.setFont('helvetica','bold'); doc.setFontSize(12);
+  doc.text('IC "Manzoni" — Roma', M+16, y+22);
+  doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(...gray);
+  doc.text('Docenti in organico: 82        Studenti: 1.100        Budget PN disponibile: € 47.500', M+16, y+40);
+  doc.text('Data: '+oggi+'        Riferimento: PN Scuola 2021-2027 · Linee guida MIM sull\'IA (DM 166/2025)', M+16, y+56);
+
+  // ---- Introduzione ----
+  y+=88;
+  doc.setTextColor(60,60,60); doc.setFont('helvetica','normal'); doc.setFontSize(10);
+  const intro='Si propone al Consiglio di Istituto l\'adozione delle seguenti soluzioni di Intelligenza Artificiale, selezionate dal catalogo nazionale G.A.I.A. e validate secondo le Linee guida MIM. Tutte le soluzioni sono conformi a GDPR e AI Act e includono un percorso formativo per il personale.';
+  doc.text(doc.splitTextToSize(intro, W-2*M), M, y);
+
+  // ---- Tabella soluzioni ----
+  y+=44;
+  doc.autoTable({
+    startY:y,
+    head:[['#','Soluzione','Ambito','Costo/anno','Formazione','Classe AI Act']],
+    body:rows.map((r,i)=>[i+1, r.nome, AMBITI[r.amb].label, '€ '+r.costo.toLocaleString('it-IT'), r.ore+' h', 'Rischio '+RISCHIO[r.id]]),
+    theme:'grid',
+    styles:{font:'helvetica', fontSize:9, cellPadding:6, textColor:[40,40,40], lineColor:[226,229,240]},
+    headStyles:{fillColor:navy, textColor:255, fontStyle:'bold', fontSize:9},
+    alternateRowStyles:{fillColor:[248,250,253]},
+    columnStyles:{0:{cellWidth:24, halign:'center'}, 3:{halign:'right', cellWidth:70}, 4:{halign:'center', cellWidth:64}},
+    margin:{left:M, right:M}
+  });
+
+  // ---- Riepilogo ----
+  let fy=doc.lastAutoTable.finalY+22;
+  if(fy>H-160){ doc.addPage(); fy=60; }
+  const boxW=(W-2*M-24)/3, boxH=56;
+  const summary=[
+    ['Soluzioni selezionate', String(rows.length), navy],
+    ['Costo annuo totale', '€ '+total.toLocaleString('it-IT'), residuo<0?[227,85,59]:green],
+    ['Quota PN residua', '€ '+residuo.toLocaleString('it-IT'), residuo<0?[227,85,59]:green]
+  ];
+  summary.forEach((s,i)=>{
+    const x=M+i*(boxW+12);
+    doc.setDrawColor(226,229,240); doc.setFillColor(255,255,255);
+    doc.roundedRect(x, fy, boxW, boxH, 6, 6, 'FD');
+    doc.setTextColor(...gray); doc.setFont('helvetica','normal'); doc.setFontSize(8.5);
+    doc.text(s[0].toUpperCase(), x+12, fy+20);
+    doc.setTextColor(...s[2]); doc.setFont('helvetica','bold'); doc.setFontSize(17);
+    doc.text(s[1], x+12, fy+42);
+  });
+
+  // seconda riga riepilogo (formazione, docenti)
+  fy+=boxH+14;
+  doc.setTextColor(...navy); doc.setFont('helvetica','bold'); doc.setFontSize(11);
+  doc.text('Percorso formativo complessivo: '+ore+' ore   ·   Docenti coinvolti: '+docenti, M, fy);
+  fy+=20;
+  doc.setTextColor(...gray); doc.setFont('helvetica','normal'); doc.setFontSize(9);
+  const note='Le licenze sono da intendersi su base annuale. Il percorso formativo associato a ciascuna soluzione è erogato su S.O.F.I.A. La rendicontazione dell\'adozione e dell\'impatto è prodotta automaticamente dalla piattaforma G.A.I.A.';
+  doc.text(doc.splitTextToSize(note, W-2*M), M, fy);
+
+  // firma
+  fy+=54;
+  if(fy<H-90){
+    doc.setDrawColor(180,180,180);
+    doc.line(M, fy, M+200, fy);
+    doc.line(W-M-200, fy, W-M, fy);
+    doc.setTextColor(...gray); doc.setFontSize(9);
+    doc.text('Il Dirigente Scolastico', M, fy+16);
+    doc.text('Il Presidente del Consiglio di Istituto', W-M-200, fy+16);
+  }
+
+  // ---- Footer su tutte le pagine ----
+  const pages=doc.internal.getNumberOfPages();
+  for(let p=1;p<=pages;p++){
+    doc.setPage(p);
+    doc.setDrawColor(226,229,240); doc.line(M, H-40, W-M, H-40);
+    doc.setTextColor(...gray); doc.setFont('helvetica','normal'); doc.setFontSize(8);
+    doc.text('G.A.I.A. — Documento generato dalla piattaforma · Ministero dell\'Istruzione e del Merito', M, H-26);
+    doc.text('Pag. '+p+' / '+pages, W-M, H-26, {align:'right'});
+  }
+
+  // Mostra il PDF in anteprima nella pagina: da lì l'utente sceglie se scaricarlo o aprirlo in una nuova scheda
+  _pdfDoc = doc;
+  if(_pdfUrl) URL.revokeObjectURL(_pdfUrl);
+  _pdfUrl = URL.createObjectURL(doc.output('blob'));
+  document.getElementById('pdfFrame').src = _pdfUrl;
+  document.getElementById('pdfModal').classList.add('show');
+  document.body.style.overflow='hidden';
+  toast('Anteprima del progetto pronta ('+rows.length+' soluzioni)');
+}
+
+/* ====== Anteprima PDF ====== */
+let _pdfDoc=null, _pdfUrl=null;
+function closePdf(){
+  document.getElementById('pdfModal').classList.remove('show');
+  document.body.style.overflow='';
+}
+function savePdf(){ if(_pdfDoc) _pdfDoc.save('Progetto_GAIA_IC_Manzoni.pdf'); }
+function openPdfTab(){ if(_pdfUrl) window.open(_pdfUrl,'_blank'); }
+
+/* ====== Panoramica scuola ====== */
+// Soluzioni già attive nell'istituto (stato corrente indipendente dal catalogo)
+const ACTIVE = [
+  {id:8,  dal:"2025-09-01", scad:"2026-12-31", uso:91, docAttivi:9,  docTot:10, studenti:1100},
+  {id:4,  dal:"2025-10-01", scad:"2026-06-30", uso:82, docAttivi:12, docTot:16, studenti:210},
+  {id:1,  dal:"2025-09-01", scad:"2026-08-31", uso:78, docAttivi:6,  docTot:8,  studenti:0},
+  {id:17, dal:"2025-10-15", scad:"2026-12-31", uso:73, docAttivi:9,  docTot:12, studenti:0},
+  {id:5,  dal:"2025-09-15", scad:"2026-09-15", uso:64, docAttivi:22, docTot:30, studenti:1100},
+  {id:3,  dal:"2025-09-20", scad:"2026-09-19", uso:69, docAttivi:20, docTot:28, studenti:640}
+];
+
+/* Budget: assegnato − spesa delle soluzioni già attive = quota libera per nuovi acquisti */
+const SPESO_ATTIVO = ACTIVE.reduce((s,a)=>s+SOLUTIONS.find(x=>x.id===a.id).costo,0);
+const BUDGET_LIBERO = BUDGET - SPESO_ATTIVO;
+
+function daysTo(dateStr){
+  const today=new Date(); today.setHours(0,0,0,0);
+  const d=new Date(dateStr+"T00:00:00");
+  return Math.round((d-today)/86400000);
+}
+function licStatus(scad){
+  const g=daysTo(scad);
+  const dd=new Date(scad+"T00:00:00").toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'});
+  if(g<0)   return {cls:"danger", txt:"Scaduta", sub:"il "+dd};
+  if(g<=30) return {cls:"danger", txt:"Scade tra "+g+"g", sub:dd};
+  if(g<=90) return {cls:"warn",   txt:"Scade tra "+g+"g", sub:dd};
+  return {cls:"ok", txt:"Attiva", sub:"scad. "+dd};
+}
+function usoColor(u){ return u>=75?"#0b9b77":u>=50?"#e08a00":"#e3553b"; }
+
+function renderSchool(){
+  const rows = ACTIVE.map(a=>({...a, s:SOLUTIONS.find(x=>x.id===a.id)}));
+  const spesa = rows.reduce((s,r)=>s+r.s.costo,0);
+  const usoMedio = Math.round(rows.reduce((s,r)=>s+r.uso,0)/rows.length);
+  const docTot = rows.reduce((s,r)=>s+r.docAttivi,0);
+  const inScad = rows.filter(r=>daysTo(r.scad)<=90).length;
+  const scadute = rows.filter(r=>daysTo(r.scad)<0).length;
+  const residuo = BUDGET - spesa;
+
+  // Alert licenze
+  const alertEl=document.getElementById('licenseAlert');
+  const critiche=rows.filter(r=>daysTo(r.scad)<=30);
+  if(critiche.length){
+    const nomi=critiche.map(r=>r.s.nome+" ("+(daysTo(r.scad)<0?"scaduta":"tra "+daysTo(r.scad)+"g")+")").join(" · ");
+    alertEl.className="alert-box danger";
+    alertEl.innerHTML=`⚠ <span><b>${critiche.length} licenz${critiche.length>1?'e':'a'} da rinnovare subito:</b> ${nomi}. Rinnova per non interrompere il servizio.</span>`;
+  } else {
+    alertEl.className="alert-box ok";
+    alertEl.innerHTML=`✓ <span>Tutte le licenze attive sono in regola. La prossima scadenza è tra ${Math.min(...rows.map(r=>daysTo(r.scad)))} giorni.</span>`;
+  }
+
+  // KPI
+  document.getElementById('kpiGrid').innerHTML = `
+    <div class="kpi accent"><div class="k">Soluzioni attive</div><div class="v">${rows.length}</div><div class="sub">su 22 a catalogo</div></div>
+    <div class="kpi"><div class="k">Spesa annua</div><div class="v">${eur(spesa)}</div><div class="sub">licenze in corso</div></div>
+    <div class="kpi good"><div class="k">Budget PN residuo</div><div class="v">${eur(residuo)}</div><div class="sub">di ${eur(BUDGET)}</div></div>
+    <div class="kpi"><div class="k">Utilizzo medio</div><div class="v">${usoMedio}%</div><div class="sub">adozione effettiva</div></div>
+    <div class="kpi ${inScad?'warn':''}"><div class="k">Licenze in scadenza</div><div class="v">${inScad}</div><div class="sub">${scadute?scadute+' già scadute':'entro 90 giorni'}</div></div>
+    <div class="kpi"><div class="k">Docenti coinvolti</div><div class="v">${docTot}</div><div class="sub">su 82 in organico</div></div>`;
+
+  // Tabella soluzioni: Traduttore (app funzionante) sempre in cima, poi per urgenza scadenza
+  rows.sort((a,b)=>{
+    if(a.id===17) return -1;
+    if(b.id===17) return 1;
+    return daysTo(a.scad)-daysTo(b.scad);
+  });
+  document.getElementById('activeTbody').innerHTML = rows.map(r=>{
+    const amb=AMBITI[r.s.amb]; const lic=licStatus(r.scad);
+    const urgente=daysTo(r.scad)<=90;
+    const isApp = r.id===17;
+    const safeName = r.s.nome.replace(/'/g,"\\'");
+    const actClass = isApp ? '' : (urgente?'danger':'');
+    const actLabel = isApp ? 'Apri traduttore →' : (urgente?'Rinnova':'Scheda');
+    const actClick = isApp ? "event.stopPropagation();openTranslator()" : `schoolAction('${urgente?'rinnova':'scheda'}','${safeName}')`;
+    return `<tr class="${isApp?'row-app':''}"${isApp?' onclick="openTranslator()" title="Apri l\'applicazione di traduzione"':''}>
+      <td>
+        <div class="sol-name"><span class="amb-dot" style="background:${amb.color}"></span>${r.s.nome}${isApp?'<span class="app-badge">App · apri</span>':''}</div>
+        <div class="amb-sub">${amb.label} · attiva dal ${new Date(r.dal+'T00:00:00').toLocaleDateString('it-IT',{month:'2-digit',year:'numeric'})}</div>
+      </td>
+      <td><b>${eur(r.s.costo)}</b></td>
+      <td><span class="lic ${lic.cls}"><span class="licdot"></span>${lic.txt}</span><div class="lic-sub">${lic.sub}</div></td>
+      <td><div class="uso-wrap"><div class="uso-track"><div class="uso-fill" style="width:${r.uso}%;background:${usoColor(r.uso)}"></div></div><div class="uso-lab">${r.uso}% ${r.uso>=75?'· alto':r.uso>=50?'· medio':'· basso'}</div></div></td>
+      <td><b>${r.docAttivi}</b> <span style="color:var(--muted)">/ ${r.docTot}</span></td>
+      <td>${r.studenti? r.studenti.toLocaleString('it-IT') : '—'}</td>
+      <td><button class="btn-mini ${actClass}" onclick="${actClick}">${actLabel}</button></td>
+    </tr>`;
+  }).join('');
+
+  // Distribuzione per ambito
+  const byAmb={};
+  rows.forEach(r=>{ byAmb[r.s.amb]=(byAmb[r.s.amb]||0)+1; });
+  const maxAmb=Math.max(...Object.values(byAmb));
+  const totAmb=rows.length;
+  const entries=Object.entries(byAmb).sort((a,b)=>b[1]-a[1]);
+  document.getElementById('ambDistSub').textContent =
+    `Come si distribuiscono le ${totAmb} soluzioni AI adottate dall'istituto tra gli ambiti d'uso.`;
+  const stack=entries.map(([k,n])=>
+    `<span class="seg" style="flex:${n};background:${AMBITI[k].color}" title="${AMBITI[k].label}: ${n}"></span>`).join('');
+  const legend=entries.map(([k,n])=>{
+    const pct=Math.round(n/totAmb*100);
+    return `<div class="amb-item">
+      <span class="amb-dotc" style="background:${AMBITI[k].color}"></span>
+      <span class="amb-name">${AMBITI[k].label}</span>
+      <span class="amb-bar"><span class="amb-barfill" style="width:${n/maxAmb*100}%;background:${AMBITI[k].color}"></span></span>
+      <span class="amb-meta"><span class="amb-num">${n}</span><span class="amb-pct">${pct}%</span></span>
+    </div>`;
+  }).join('');
+  document.getElementById('ambDist').innerHTML = `<div class="amb-stack">${stack}</div><div class="amb-legend">${legend}</div>`;
+
+  // Insight utilizzo
+  const top=[...rows].sort((a,b)=>b.uso-a.uso)[0];
+  const low=[...rows].sort((a,b)=>a.uso-b.uso)[0];
+  document.getElementById('usageInsight').innerHTML = `
+    <h4>Utilizzo delle soluzioni</h4>
+    <div class="big">Più utilizzata: ${top.s.nome}</div>
+    <div class="note">Adozione al ${top.uso}% con ${top.docAttivi} docenti attivi.</div>
+    <div class="big" style="margin-top:12px">Da rilanciare: ${low.s.nome}</div>
+    <div class="note">Solo il ${low.uso}% di utilizzo: valuta formazione aggiuntiva o affiancamento per aumentarne l'impatto.</div>`;
+}
+
+function schoolAction(kind,nome){
+  if(kind==='rinnova') toast('Richiesta di rinnovo licenza avviata: '+nome+' (demo)');
+  else toast('Apertura scheda soluzione: '+nome+' (demo)');
+}
+
+/* ====== Traduttore Comunicazioni Multilingue (soluzione AI) ====== */
+const TR_LANGS = [
+  {c:'en',n:'Inglese',f:'🇬🇧'},{c:'fr',n:'Francese',f:'🇫🇷'},{c:'de',n:'Tedesco',f:'🇩🇪'},
+  {c:'es',n:'Spagnolo',f:'🇪🇸'},{c:'pt',n:'Portoghese',f:'🇵🇹'},{c:'ro',n:'Rumeno',f:'🇷🇴'},
+  {c:'sq',n:'Albanese',f:'🇦🇱'},{c:'ar',n:'Arabo',f:'🇸🇦',rtl:1},{c:'zh-CN',n:'Cinese',f:'🇨🇳'},
+  {c:'uk',n:'Ucraino',f:'🇺🇦'},{c:'ru',n:'Russo',f:'🇷🇺'},{c:'pl',n:'Polacco',f:'🇵🇱'},
+  {c:'bg',n:'Bulgaro',f:'🇧🇬'},{c:'hi',n:'Hindi',f:'🇮🇳'},{c:'ur',n:'Urdu',f:'🇵🇰',rtl:1},
+  {c:'bn',n:'Bengali',f:'🇧🇩'},{c:'pa',n:'Punjabi',f:'🇮🇳'},{c:'tl',n:'Filippino',f:'🇵🇭'},
+  {c:'so',n:'Somalo',f:'🇸🇴'},{c:'am',n:'Amarico',f:'🇪🇹'},{c:'ti',n:'Tigrino',f:'🇪🇷'},
+  {c:'tr',n:'Turco',f:'🇹🇷'},{c:'ku',n:'Curdo',f:'🏳️'},{c:'fa',n:'Persiano',f:'🇮🇷',rtl:1},
+  {c:'sr',n:'Serbo',f:'🇷🇸'},{c:'hr',n:'Croato',f:'🇭🇷'},{c:'mk',n:'Macedone',f:'🇲🇰'},
+  {c:'el',n:'Greco',f:'🇬🇷'},{c:'hu',n:'Ungherese',f:'🇭🇺'},{c:'nl',n:'Olandese',f:'🇳🇱'}
+];
+const TR_TPL = [
+  {t:'Chiusura anticipata', x:"Gentili famiglie, si comunica che venerdì 20 le lezioni termineranno alle ore 12:00 per una riunione del personale docente. Il servizio mensa non sarà attivo. Si raccomanda la puntualità nel ritiro degli alunni. Grazie per la collaborazione. La Dirigente Scolastica."},
+  {t:'Convocazione colloqui', x:"Gentili genitori, si comunica che i colloqui individuali con i docenti si terranno martedì 12 dalle ore 16:30 alle ore 19:00. È possibile prenotare un appuntamento tramite il registro elettronico. Vi aspettiamo numerosi. La Segreteria."},
+  {t:'Uscita didattica', x:"Gentili famiglie, la classe parteciperà a un'uscita didattica giovedì 5. La partenza è prevista alle ore 8:30 e il rientro alle ore 14:00. Si prega di consegnare l'autorizzazione firmata entro lunedì 2. Grazie."},
+  {t:'Iscrizioni', x:"Si comunica che le iscrizioni per il prossimo anno scolastico sono aperte dal 10 al 30 del mese. Per assistenza è possibile contattare la segreteria negli orari di apertura al pubblico."}
+];
+/* Fallback dimostrativo (usato solo se la traduzione AI online non è raggiungibile) per il modello "Chiusura anticipata" */
+const TR_FALLBACK = {
+  en:"Dear families, please be informed that on Friday the 20th lessons will end at 12:00 due to a teaching staff meeting. The canteen service will not be available. Please be punctual in picking up the pupils. Thank you for your cooperation. The School Principal.",
+  fr:"Chères familles, nous vous informons que le vendredi 20, les cours se termineront à 12h00 en raison d'une réunion du personnel enseignant. Le service de cantine ne sera pas assuré. Merci d'être ponctuels pour venir chercher les élèves. Merci de votre collaboration. La Directrice.",
+  es:"Estimadas familias, les informamos que el viernes 20 las clases finalizarán a las 12:00 por una reunión del personal docente. El servicio de comedor no estará disponible. Se ruega puntualidad al recoger a los alumnos. Gracias por su colaboración. La Directora.",
+  de:"Sehr geehrte Familien, wir teilen Ihnen mit, dass am Freitag, den 20., der Unterricht wegen einer Lehrerkonferenz um 12:00 Uhr endet. Der Mensadienst findet nicht statt. Bitte holen Sie die Schüler pünktlich ab. Vielen Dank für Ihre Mitarbeit. Die Schulleiterin.",
+  ro:"Dragi familii, vă informăm că vineri, 20, cursurile se vor încheia la ora 12:00 din cauza unei ședințe a personalului didactic. Serviciul de cantină nu va fi disponibil. Vă rugăm să fiți punctuali la preluarea elevilor. Vă mulțumim pentru colaborare. Directoarea.",
+  sq:"Të nderuara familje, ju njoftojmë se të premten më 20 mësimet do të përfundojnë në orën 12:00 për shkak të një mbledhjeje të personelit mësimor. Shërbimi i mensës nuk do të jetë aktiv. Ju lutemi të jeni të përpiktë në marrjen e nxënësve. Faleminderit për bashkëpunimin. Drejtoresha.",
+  ar:"أعزائي أولياء الأمور، نُعلمكم أنه يوم الجمعة الموافق 20 ستنتهي الدروس في الساعة 12:00 بسبب اجتماع لهيئة التدريس. لن تكون خدمة المقصف متاحة. يُرجى الالتزام بالمواعيد عند اصطحاب الطلاب. شكرًا لتعاونكم. مديرة المدرسة.",
+  'zh-CN':"亲爱的家长：现通知您，由于教师会议，本周五（20日）课程将于12:00结束。当天食堂服务暂停。请准时接学生放学。感谢您的配合。校长。",
+  uk:"Шановні батьки, повідомляємо, що в п'ятницю, 20-го, уроки завершаться о 12:00 через збори педагогічного колективу. Їдальня цього дня не працюватиме. Просимо приходити вчасно, щоб забрати учнів. Дякуємо за співпрацю. Директорка школи."
+};
+
+let _trTimer=null, _trSeq=0;
+function openTranslator(){
+  const sel=document.getElementById('trLang');
+  if(!sel.options.length){
+    sel.innerHTML = TR_LANGS.map(l=>`<option value="${l.c}">${l.f} ${l.n}</option>`).join('');
+  }
+  const src=document.getElementById('trSource');
+  if(!src.value.trim()) src.value = TR_TPL[0].x;
+  trHidePanel();
+  updateTrHistCount();
+  updateTrCount();
+  document.getElementById('trModal').classList.add('show');
+  document.body.style.overflow='hidden';
+  doTranslate();
+}
+function closeTranslator(){
+  document.getElementById('trModal').classList.remove('show');
+  document.body.style.overflow='';
+  if('speechSynthesis' in window) speechSynthesis.cancel();
+}
+function trTemplate(i){
+  document.getElementById('trSource').value = TR_TPL[i].x;
+  updateTrCount(); doTranslate();
+}
+function updateTrCount(){
+  document.getElementById('trSrcCount').textContent = document.getElementById('trSource').value.length+' caratteri';
+}
+function scheduleTranslate(){ clearTimeout(_trTimer); _trTimer=setTimeout(doTranslate,550); }
+async function mmTranslate(text, code){
+  const url='https://api.mymemory.translated.net/get?q='+encodeURIComponent(text)+'&langpair=it|'+encodeURIComponent(code);
+  const r=await fetch(url);
+  if(!r.ok) throw new Error('http '+r.status);
+  const j=await r.json();
+  const t=j && j.responseData && j.responseData.translatedText;
+  if(!t || /MYMEMORY WARNING|QUERY LENGTH|INVALID/i.test(t)) throw new Error('no translation');
+  return t;
+}
+async function doTranslate(){
+  const src=document.getElementById('trSource').value.trim();
+  const code=document.getElementById('trLang').value;
+  const lang=TR_LANGS.find(l=>l.c===code)||{n:code};
+  const out=document.getElementById('trOut');
+  out.classList.toggle('rtl', !!lang.rtl);
+  if(!src){ out.value=''; setTrStatus('',''); return; }
+  const seq=++_trSeq;
+  setTrStatus('loading','Traduzione AI in corso…');
+  try{
+    const parts=src.split(/\n+/).map(s=>s.trim()).filter(Boolean);
+    const res=[];
+    for(const p of parts){ res.push(await mmTranslate(p, code)); }
+    if(seq!==_trSeq) return;
+    out.value=res.join('\n');
+    setTrStatus('ok','✓ Tradotto in '+lang.n+' · motore AI G.A.I.A.');
+  }catch(e){
+    if(seq!==_trSeq) return;
+    if(src===TR_TPL[0].x && TR_FALLBACK[code]){
+      out.value=TR_FALLBACK[code];
+      setTrStatus('ok','✓ Tradotto in '+lang.n+' (anteprima dimostrativa offline)');
+    }else{
+      out.value='';
+      setTrStatus('err','⚠ Traduzione AI non raggiungibile: verifica la connessione a Internet e riprova.');
+    }
+  }
+}
+function setTrStatus(kind,msg){
+  const el=document.getElementById('trStatus');
+  if(!msg){ el.innerHTML=''; return; }
+  el.innerHTML=(kind==='loading'?'<span class="dot"></span>':'')+msg;
+  el.style.color = kind==='err' ? '#c0392b' : (kind==='ok' ? '#0b7a5b' : 'var(--muted)');
+}
+function trCopy(){
+  const o=document.getElementById('trOut');
+  if(!o.value){ toast('Nessuna traduzione da copiare'); return; }
+  if(navigator.clipboard) navigator.clipboard.writeText(o.value);
+  else { o.removeAttribute('readonly'); o.select(); try{document.execCommand('copy');}catch(_){} o.setAttribute('readonly',''); }
+  toast('Traduzione copiata negli appunti');
+}
+function trSpeak(){
+  const o=document.getElementById('trOut'); const code=document.getElementById('trLang').value;
+  if(!o.value){ toast('Nessuna traduzione da leggere'); return; }
+  if(!('speechSynthesis' in window)){ toast('Sintesi vocale non supportata dal browser'); return; }
+  const u=new SpeechSynthesisUtterance(o.value); u.lang=code;
+  speechSynthesis.cancel(); speechSynthesis.speak(u);
+  toast('Riproduzione audio della traduzione');
+}
+/* Estrazione riutilizzabile del testo da un PDF */
+async function extractPdfText(file){
+  const buf=await file.arrayBuffer();
+  const pdf=await pdfjsLib.getDocument({data:buf}).promise;
+  let text='';
+  for(let p=1;p<=pdf.numPages;p++){
+    const page=await pdf.getPage(p);
+    const content=await page.getTextContent();
+    text += content.items.map(it=>it.str).join(' ')+'\n\n';
+  }
+  text=text.replace(/[ \t]+/g,' ').replace(/\n{3,}/g,'\n\n').trim();
+  return {text, pages:pdf.numPages};
+}
+/* Caricamento di un PDF: estrae il testo, lo traduce e lo salva nello storico */
+async function trLoadPdf(e){
+  const file=e.target.files[0]; if(!file) return;
+  const nameEl=document.getElementById('trPdfName');
+  if(!window.pdfjsLib){ toast('Lettore PDF non disponibile (richiede connessione)'); e.target.value=''; return; }
+  nameEl.textContent='Lettura di '+file.name+'…';
+  setTrStatus('loading','Estrazione del testo dal PDF…');
+  try{
+    const {text,pages}=await extractPdfText(file);
+    if(!text){ setTrStatus('err','⚠ Nessun testo estraibile dal PDF (potrebbe essere un documento scansionato).'); nameEl.textContent=''; e.target.value=''; return; }
+    trHidePanel();
+    document.getElementById('trSource').value=text;
+    updateTrCount();
+    nameEl.textContent='📄 '+file.name+' · '+pages+' pag.';
+    trSaveHistory(file.name, text, pages);
+    doTranslate();
+  }catch(err){
+    setTrStatus('err','⚠ Impossibile leggere il PDF. Riprova con un altro file.');
+    nameEl.textContent='';
+  }
+  e.target.value='';
+}
+/* Traduzione automatica del testo/PDF in tutte le 30 lingue, con export in un unico documento */
+let _trAllBusy=false;
+async function trTranslateAll(){
+  const src=document.getElementById('trSource').value.trim();
+  if(!src){ toast('Inserisci un testo o carica un PDF da tradurre'); return; }
+  if(_trAllBusy){ return; }
+  _trAllBusy=true;
+  const parts=src.split(/\n+/).map(s=>s.trim()).filter(Boolean);
+  let doc='TRADUZIONE MULTILINGUE · G.A.I.A. — Traduttore Comunicazioni Multilingue\n'
+        + 'Ministero dell\'Istruzione e del Merito\n\n'
+        + 'TESTO ORIGINALE (Italiano):\n'+src+'\n\n'+'='.repeat(60)+'\n\n';
+  let n=0;
+  for(const l of TR_LANGS){
+    n++;
+    setTrStatus('loading','Traduzione nelle 30 lingue… '+n+'/'+TR_LANGS.length+' · '+l.n);
+    let tr='';
+    try{
+      const res=[];
+      for(const p of parts){ res.push(await mmTranslate(p, l.c)); }
+      tr=res.join('\n');
+    }catch(_){
+      tr = (src===TR_TPL[0].x && TR_FALLBACK[l.c]) ? TR_FALLBACK[l.c] : '(traduzione non disponibile in questo momento)';
+    }
+    doc += l.f+' '+l.n.toUpperCase()+'\n'+tr+'\n\n'+'-'.repeat(40)+'\n\n';
+  }
+  _trAllBusy=false;
+  setTrStatus('ok','✓ Tradotto nelle '+TR_LANGS.length+' lingue · documento scaricato');
+  const blob=new Blob([doc],{type:'text/plain;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='Traduzioni_30_lingue_GAIA.txt';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),5000);
+  toast('Documento con le 30 traduzioni scaricato');
+}
+
+/* ====== Storico PDF caricati (per profilo) ====== */
+function _esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function _fmtDate(d){ if(!d) return ''; const p=d.split('-'); return p.length===3?`${p[2]}/${p[1]}/${p[0]}`:d; }
+function trHistKey(){ return 'gaia_tr_pdfs_'+(currentProfile||'anon'); }
+function trGetHistory(){ try{ return JSON.parse(localStorage.getItem(trHistKey())||'[]'); }catch(_){ return []; } }
+function trSetHistory(a){ try{ localStorage.setItem(trHistKey(), JSON.stringify(a)); }catch(_){ } updateTrHistCount(); }
+function trSaveHistory(name, text, pages){
+  const a=trGetHistory();
+  a.unshift({id:'p'+Date.now(), name, text, pages, when:new Date().toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'})});
+  trSetHistory(a.slice(0,40));
+}
+function updateTrHistCount(){ const el=document.getElementById('trHistCount'); if(el) el.textContent=trGetHistory().length; }
+function trHistTranslate(id){
+  const it=trGetHistory().find(x=>x.id===id); if(!it) return;
+  trHidePanel();
+  document.getElementById('trSource').value=it.text;
+  document.getElementById('trPdfName').textContent='📄 '+it.name;
+  updateTrCount(); doTranslate();
+}
+function trHistRemove(id){
+  trSetHistory(trGetHistory().filter(x=>x.id!==id));
+  trRenderPanel('history');
+  toast('PDF rimosso dallo storico');
+}
+
+/* ====== Libreria documenti IC Manzoni ====== */
+const IC_SITE='https://ic-manzoni.edu.it/comunicazioni/';
+const LIBRARY=[
+  {label:'Notizie in evidenza', icon:'📌', url:'https://ic-manzoni.edu.it/category/in-evidenza/', docs:[
+    {t:'Sciopero del 27 marzo 2026', d:'2026-03-26', url:'https://ic-manzoni.edu.it/2026/03/26/sciopero-del-27-marzo-2026/', x:"Si comunica che venerdì 27 marzo 2026, causa sciopero per l'intera giornata, non sarà assicurato il normale svolgimento delle lezioni. L'ingresso degli alunni è posticipato di 10 minuti per la verifica della presa di servizio del personale."},
+    {t:'Consultazioni referendarie del 22 e 23 marzo 2026', d:'2026-03-19', url:'https://ic-manzoni.edu.it/2026/03/19/consultazioni-referendarie-del-22-e-23-marzo-2026/', x:"Si comunica che, in occasione delle consultazioni elettorali previste per i giorni 22 e 23 marzo, i plessi Manzoni e Sibari saranno messi a disposizione dell'Amministrazione comunale quale sede di seggio."},
+    {t:'Sospensione attività didattica — festività natalizie', d:'2025-12-19', url:'https://ic-manzoni.edu.it/2025/12/19/sospensione-attivita-didattica-festivita-natalizie-2/', x:"Si comunica che, come da calendario scolastico, le attività didattiche saranno sospese dal 22 dicembre 2025 al 6 gennaio 2026. Gli alunni rientreranno a scuola mercoledì 7 gennaio 2026."}
+  ]},
+  {label:'Archivio news', icon:'🗞️', url:'https://ic-manzoni.edu.it/category/news/', docs:[
+    {t:'Assemblea sindacale del 17 marzo 2026', d:'2026-03-16', url:'https://ic-manzoni.edu.it/2026/03/16/assemblea-sindacale-del-17-marzo-2026/', x:"Si comunica che martedì 17 marzo 2026, causa assemblea sindacale, le classi IV G e V G della scuola primaria entreranno alle ore 11:30. Per la scuola secondaria di primo grado si raccomanda di consultare il registro elettronico."},
+    {t:'Sciopero del 9 marzo 2026', d:'2026-03-05', url:'https://ic-manzoni.edu.it/2026/03/05/sciopero-del-9-marzo-2026/', x:"Si comunica che lunedì 9 marzo 2026, causa sciopero per l'intera giornata, non sarà assicurato il normale svolgimento delle lezioni. L'ingresso degli alunni è posticipato di 10 minuti."},
+    {t:'Scuole aperte a Natale 2025/2026', d:'2025-12-18', url:'https://ic-manzoni.edu.it/2025/12/18/scuole-aperte-a-natale-2025-2026/', x:"Si comunica che alle ore 12:00 di oggi sarà affisso nell'atrio della scuola l'elenco degli alunni ammessi al progetto «Scuole Aperte a Natale 2025-26». Le famiglie interessate sono invitate a prenderne visione."}
+  ]},
+  {label:'Circolari pubbliche', icon:'📢', url:'https://nuvola.madisoft.it/bacheca-digitale/bacheca/RMIC8GD00D/2/IN_PUBBLICAZIONE/0/show', docs:[
+    {t:'Circolare — Ricevimento pomeridiano dei genitori', d:'2026-02-10', url:'', x:"Si comunica alle famiglie che i colloqui pomeridiani con i docenti si terranno secondo il calendario pubblicato sul registro elettronico. È necessario prenotare l'appuntamento tramite l'apposita funzione."},
+    {t:'Circolare — Orario delle lezioni e servizio mensa', d:'2025-09-25', url:'', x:"Si comunica l'orario definitivo delle lezioni a partire dal mese di ottobre e le modalità di erogazione del servizio mensa. Le famiglie sono invitate a prendere visione delle disposizioni allegate."}
+  ]},
+  {label:'Amministrazione trasparente', icon:'📁', url:'https://nuvola.madisoft.it/bacheca-digitale/bacheca/RMIC8GD00D/3/IN_PUBBLICAZIONE/0/show', docs:[
+    {t:'Avviso pubblico di selezione — esperti PNRR', d:'2026-01-20', url:'', x:"È indetta una procedura di selezione per il reclutamento di esperti nell'ambito dei progetti PNRR dell'Istituto. Le domande dovranno pervenire entro il termine indicato nell'avviso, secondo le modalità specificate."},
+    {t:'Determina di aggiudicazione — fornitura materiale didattico', d:'2025-11-14', url:'', x:"Si pubblica la determina di aggiudicazione relativa alla fornitura di materiale didattico e informatico, con l'indicazione dell'operatore economico affidatario e dell'importo contrattuale."}
+  ]},
+  {label:'Albo pretorio online', icon:'📜', url:'https://nuvola.madisoft.it/bacheca-digitale/bacheca/RMIC8GD00D/1/IN_PUBBLICAZIONE/0/show', docs:[
+    {t:"Graduatorie interne d'istituto — personale docente", d:'2026-03-01', url:'', x:"Si pubblicano all'Albo le graduatorie interne d'istituto del personale docente per l'individuazione di eventuali soprannumerari. Avverso le stesse è possibile presentare reclamo nei termini di legge."},
+    {t:'Diete speciali alunni e personale — a.s. in corso', d:'2025-09-30', url:'', x:"Si pubblicano le disposizioni relative alla richiesta di diete speciali per alunni e personale, con l'indicazione della documentazione sanitaria necessaria e delle modalità di presentazione."}
+  ]},
+  {label:'Bacheca sindacale', icon:'🧾', url:'https://nuvola.madisoft.it/bacheca-digitale/bacheca/RMIC8GD00D/5/IN_PUBBLICAZIONE/0/show', docs:[
+    {t:'Indizione assemblea sindacale del personale', d:'2026-02-20', url:'', x:"Le Organizzazioni Sindacali indicono un'assemblea sindacale rivolta al personale docente e ATA. Il personale interessato è invitato a comunicare l'adesione secondo le modalità previste dalla normativa vigente."},
+    {t:'Proclamazione sciopero comparto istruzione', d:'2026-03-02', url:'', x:"Si informa il personale della proclamazione di uno sciopero nazionale del comparto istruzione e ricerca, con l'indicazione delle sigle sindacali proclamanti e delle relative motivazioni."}
+  ]}
+];
+function libUploadsKey(){ return 'gaia_lib_uploads'; }
+function libGetUploads(){ try{ return JSON.parse(localStorage.getItem(libUploadsKey())||'[]'); }catch(_){ return []; } }
+function libSetUploads(a){ try{ localStorage.setItem(libUploadsKey(), JSON.stringify(a)); }catch(_){ } }
+let _libDocs={};
+let _libPendingPdf=null;
+function libTranslate(id){
+  const d=_libDocs[id]; if(!d) return;
+  if(!d.x){ toast("Documento con solo link: apri l'originale per consultarlo"); if(d.url) window.open(d.url,'_blank'); return; }
+  trHidePanel();
+  document.getElementById('trSource').value=d.x;
+  document.getElementById('trPdfName').textContent='📄 '+d.t;
+  updateTrCount(); doTranslate();
+}
+async function libAddPdf(e){
+  const file=e.target.files[0]; if(!file) return;
+  const info=document.getElementById('luPdfInfo');
+  if(!window.pdfjsLib){ toast('Lettore PDF non disponibile'); e.target.value=''; return; }
+  if(info) info.textContent='Lettura di '+file.name+'…';
+  try{
+    const {text,pages}=await extractPdfText(file);
+    _libPendingPdf={name:file.name, text, pages};
+    if(info) info.textContent='📄 '+file.name+' · '+pages+' pag. — pronto per l\'aggiunta';
+    const tt=document.getElementById('luTitle'); if(tt && !tt.value.trim()) tt.value=file.name.replace(/\.pdf$/i,'');
+  }catch(_){ if(info) info.textContent='⚠ PDF non leggibile'; _libPendingPdf=null; }
+  e.target.value='';
+}
+function libSubmit(){
+  const t=(document.getElementById('luTitle')||{}).value?document.getElementById('luTitle').value.trim():'';
+  const url=(document.getElementById('luLink')||{}).value?document.getElementById('luLink').value.trim():'';
+  if(!t){ toast('Inserisci un titolo per il documento'); return; }
+  if(!url && !_libPendingPdf){ toast('Aggiungi un PDF oppure un link'); return; }
+  const uploads=libGetUploads();
+  uploads.unshift({id:'u'+Date.now(), t, url:url||'', x:_libPendingPdf?_libPendingPdf.text:'', pages:_libPendingPdf?_libPendingPdf.pages:0,
+    when:new Date().toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'}),
+    by:(PROFILI[currentProfile]?PROFILI[currentProfile].label:'')});
+  libSetUploads(uploads);
+  _libPendingPdf=null;
+  trRenderPanel('library');
+  toast('Documento aggiunto alla libreria');
+}
+function libRemoveUpload(id){ libSetUploads(libGetUploads().filter(x=>x.id!==id)); trRenderPanel('library'); toast('Documento rimosso dalla libreria'); }
+
+/* ====== Pannelli del traduttore (storico / libreria) ====== */
+function trShowPanel(kind){
+  const b=document.getElementById('trBody'); if(b) b.style.display='none';
+  const f=document.getElementById('trFoot'); if(f) f.style.display='none';
+  const p=document.getElementById('trPanel'); if(p) p.classList.add('show');
+  trRenderPanel(kind);
+}
+function trHidePanel(){
+  const p=document.getElementById('trPanel'); if(p){ p.classList.remove('show'); p.innerHTML=''; }
+  const b=document.getElementById('trBody'); if(b) b.style.display='';
+  const f=document.getElementById('trFoot'); if(f) f.style.display='';
+}
+function trRenderPanel(kind){
+  const p=document.getElementById('trPanel'); if(!p) return;
+  p.innerHTML = kind==='history' ? trHistoryHTML() : trLibraryHTML();
+}
+function trHistoryHTML(){
+  const a=trGetHistory();
+  const items = a.length ? a.map(it=>`
+    <div class="hist-item">
+      <div class="hist-ic">📄</div>
+      <div class="ld-main">
+        <div class="ld-t">${_esc(it.name)}</div>
+        <div class="ld-d">Caricato il ${it.when}${it.pages?' · '+it.pages+' pag.':''} · ${it.text.length.toLocaleString('it-IT')} caratteri</div>
+        <div class="ld-x">${_esc(it.text.slice(0,180))}…</div>
+      </div>
+      <div class="ld-actions">
+        <button class="ld-btn" onclick="trHistTranslate('${it.id}')">🌐 Traduci di nuovo</button>
+        <button class="ld-rm" onclick="trHistRemove('${it.id}')">Rimuovi</button>
+      </div>
+    </div>`).join('')
+    : '<div class="hist-empty">Non hai ancora caricato PDF. Usa «📄 Carica PDF»: i documenti resteranno qui e potrai ritradurli o rimuoverli in qualsiasi momento.</div>';
+  return `<div class="tr-panel-head"><div class="tr-panel-title">🗂 I miei PDF caricati</div><button class="tr-back" onclick="trHidePanel()">← Torna al traduttore</button></div>${items}`;
+}
+function libDocRow(id,title,date,text,url,extra){
+  return `<div class="lib-doc">
+    <div class="ld-main">
+      <div class="ld-t">${_esc(title)}</div>
+      <div class="ld-d">${_esc(date||'')}</div>
+      ${text?`<div class="ld-x">${_esc(text)}</div>`:''}
+    </div>
+    <div class="ld-actions">
+      <button class="ld-btn" onclick="libTranslate('${id}')">🌐 Traduci</button>
+      ${url?`<a class="ld-link" href="${url}" target="_blank" rel="noopener noreferrer">Apri originale ↗</a>`:''}
+      ${extra||''}
+    </div>
+  </div>`;
+}
+function trLibraryHTML(){
+  _libDocs={};
+  let out=`<div class="tr-panel-head"><div class="tr-panel-title">📚 Libreria documenti · IC Manzoni</div><button class="tr-back" onclick="trHidePanel()">← Torna al traduttore</button></div>`;
+  if(currentProfile==='ata'||currentProfile==='dirigente'){
+    out+=`<div class="lib-upload">
+      <h4>＋ Carica un documento nella libreria</h4>
+      <div class="lu-note">Personale amministrativo e Dirigente: aggiungi un PDF o il link a una nuova comunicazione da tradurre.</div>
+      <div class="lu-row">
+        <input type="text" id="luTitle" placeholder="Titolo del documento">
+        <input type="text" id="luLink" placeholder="Link (facoltativo) es. https://…">
+        <button class="tr-tool-btn tr-pdf" onclick="document.getElementById('trLibPdfInput').click()">📄 Scegli PDF</button>
+        <button class="ld-btn" onclick="libSubmit()">Aggiungi</button>
+      </div>
+      <div class="lu-note" id="luPdfInfo" style="margin-top:8px"></div>
+    </div>`;
+  }
+  const uploads=libGetUploads();
+  if(uploads.length){
+    const rows=uploads.map(d=>{ const id='up-'+d.id; _libDocs[id]={t:d.t,x:d.x,url:d.url};
+      return libDocRow(id, d.t, d.when+(d.by?' · '+d.by:''), d.x||(d.url?"Documento con link esterno — apri l'originale per consultarlo.":''), d.url, `<button class="ld-rm" onclick="libRemoveUpload('${d.id}')">Rimuovi</button>`);
+    }).join('');
+    out+=`<div class="lib-sec"><div class="lib-sec-head">📥 Documenti caricati dall'istituto</div>${rows}</div>`;
+  }
+  LIBRARY.forEach((sec,si)=>{
+    const rows=sec.docs.map((d,di)=>{ const id='s'+si+'-'+di; _libDocs[id]={t:d.t,x:d.x,url:d.url};
+      return libDocRow(id, d.t, _fmtDate(d.d), d.x, d.url, '');
+    }).join('');
+    out+=`<div class="lib-sec"><div class="lib-sec-head">${sec.icon} ${sec.label}<a class="lib-open" href="${sec.url}" target="_blank" rel="noopener noreferrer">Apri sezione ↗</a></div>${rows}</div>`;
+  });
+  return out;
+}
+
+/* ====== Workspace generica degli strumenti AI (profilo Docente) ====== */
+let _toolId=null;
+function openTool(id){
+  const s=SOLUTIONS.find(x=>x.id===id); if(!s) return;
+  /* In questa demo è pienamente funzionante solo il Traduttore multilingue */
+  if(id===17){ openTranslator(); return; }
+  openStandby(s); return;
+}
+/* Strumenti non ancora attivi: schermata di standby */
+function openStandby(s){
+  document.getElementById('sbTitle').textContent = s.nome;
+  document.getElementById('sbDesc').innerHTML = 'Questo strumento è <b>in standby</b> in questa versione dimostrativa e sarà disponibile a breve. '
+    + 'Al momento è pienamente funzionante il <b>Traduttore Comunicazioni Multilingue</b>, che traduce testi e PDF nelle 30 lingue.';
+  document.getElementById('standbyModal').classList.add('show');
+  document.body.style.overflow='hidden';
+}
+function closeStandby(){
+  document.getElementById('standbyModal').classList.remove('show');
+  document.body.style.overflow='';
+}
+function _openToolWorkspace(id){
+  const s=SOLUTIONS.find(x=>x.id===id); if(!s) return;
+  _toolId=id;
+  const meta=TOOL_META[id]||{};
+  document.getElementById('toolTitle').textContent=s.nome;
+  document.getElementById('toolSub').textContent='G.A.I.A. · '+AMBITI[s.amb].label+' · strumento AI validato MIM';
+  const inp=document.getElementById('toolIn');
+  inp.value=''; inp.placeholder=meta.ph||'Inserisci qui il contenuto…';
+  document.getElementById('toolOut').value='';
+  document.getElementById('toolStatus').innerHTML='';
+  document.getElementById('toolSpeakBtn').style.display = meta.speak ? '' : 'none';
+  document.getElementById('toolModal').classList.add('show');
+  document.body.style.overflow='hidden';
+}
+function closeTool(){
+  const m=document.getElementById('toolModal'); if(m) m.classList.remove('show');
+  document.body.style.overflow='';
+  if('speechSynthesis' in window) speechSynthesis.cancel();
+}
+function toolSample(){
+  const m=TOOL_META[_toolId];
+  if(m && m.sample){ document.getElementById('toolIn').value=m.sample; }
+}
+function toolRun(){
+  const inp=document.getElementById('toolIn').value.trim();
+  const out=document.getElementById('toolOut');
+  const st=document.getElementById('toolStatus');
+  if(!inp){ toast('Inserisci un contenuto da elaborare'); return; }
+  st.innerHTML='<span class="dot"></span>Elaborazione AI in corso…'; st.style.color='var(--muted)'; out.value='';
+  setTimeout(()=>{
+    out.value=runTool(_toolId, inp);
+    st.innerHTML='✓ Generato dal motore AI G.A.I.A.'; st.style.color='#0b7a5b';
+  }, 650);
+}
+function toolCopy(){
+  const o=document.getElementById('toolOut');
+  if(!o.value){ toast('Nessun risultato da copiare'); return; }
+  if(navigator.clipboard) navigator.clipboard.writeText(o.value);
+  toast('Risultato copiato negli appunti');
+}
+function toolSpeak(){
+  const t=document.getElementById('toolIn').value || document.getElementById('toolOut').value;
+  if(!t){ toast('Nessun testo da leggere'); return; }
+  if(!('speechSynthesis' in window)){ toast('Sintesi vocale non supportata dal browser'); return; }
+  const u=new SpeechSynthesisUtterance(t); u.lang='it-IT';
+  speechSynthesis.cancel(); speechSynthesis.speak(u);
+  toast('Riproduzione audio in corso');
+}
+/* Motore dimostrativo: genera un output plausibile e coerente con lo strumento */
+function runTool(id, input){
+  switch(id){
+    case 5: return `MATERIALE DIDATTICO — "${input}"\n\n▸ Obiettivi di apprendimento\n • Comprendere i concetti chiave dell'argomento\n • Applicare le conoscenze in esempi concreti\n • Sviluppare un lessico specifico\n\n▸ Sviluppo della lezione (2 ore)\n 1. Introduzione e attivazione delle preconoscenze (15')\n 2. Spiegazione guidata con esempi (40')\n 3. Attività a coppie / laboratorio (35')\n 4. Sintesi e mappa concettuale condivisa (20')\n\n▸ Verifica formativa (5 quesiti)\n 1. Domanda a risposta aperta sul concetto principale\n 2. Vero/Falso con correzione\n 3. Completa la definizione\n 4. Esempio pratico da analizzare\n 5. Collega i termini alle definizioni\n\n(Materiale allineato alle Indicazioni Nazionali — bozza modificabile)`;
+    case 3: return `TUTOR AI — spiegazione personalizzata\n\nDomanda: "${input}"\n\n1) Partiamo dalle basi, con parole semplici.\n2) Un esempio concreto per fissare il concetto.\n3) Un piccolo esercizio guidato per verificare la comprensione.\n4) Un suggerimento di studio su misura per lo studente.\n\nSuggerimento per il docente: proponi un secondo esempio con difficoltà crescente e chiedi allo studente di spiegarlo a parole sue.`;
+    case 4: {
+      const frasi=input.split(/(?<=[.!?])\s+/).filter(Boolean);
+      const bullet=frasi.map(f=>' • '+f.trim()).join('\n');
+      return `VERSIONE ACCESSIBILE (BES/DSA)\n\n▸ Testo semplificato in punti\n${bullet}\n\n▸ Parole chiave da evidenziare\n (individuate automaticamente per la mappa)\n\n▸ Supporti attivabili\n • Sintesi vocale del testo\n • Alto contrasto e font ad alta leggibilità\n • Mappa concettuale compensativa\n\n(Materiale coerente con il PDP — rivedibile dal docente)`;
+    }
+    case 12: return `SINTESI VOCALE — audio pronto ✔\n\nTesto convertito in audio (voce italiana naturale).\nUsa il pulsante 🔊 Ascolta per riprodurre.\n\nTesto:\n"${input}"\n\nOpzioni: velocità regolabile · download MP3 · versione ad alta leggibilità.`;
+    case 11: return `CORREZIONE ASSISTITA\n\nRisposta valutata:\n"${input}"\n\n▸ Punteggio proposto: 8/10\n▸ Punti di forza: contenuto pertinente e corretto nei fatti principali.\n▸ Da migliorare: arricchire con cause/conseguenze e collegamenti.\n▸ Feedback allo studente: "Buona risposta! Aggiungi qualche dettaglio in più sul contesto per renderla completa."\n\n⚠ La valutazione finale resta sempre del docente (supervisione umana).`;
+    case 19: return `FEEDBACK FORMATIVO\n\nElaborato:\n"${input}"\n\n▸ Cosa funziona\n • Idea centrale chiara e pertinente\n • Struttura comprensibile\n\n▸ Suggerimenti di miglioramento\n • Aggiungi almeno un esempio a sostegno della tesi\n • Cura i connettivi tra le frasi per una lettura più fluida\n • Rivedi la conclusione rendendola più incisiva\n\n▸ Prossimo passo\n Riscrivi il paragrafo centrale applicando il primo suggerimento.\n\n(Feedback costruttivo allineato agli obiettivi di apprendimento)`;
+    case 13: return `ORIENTAMENTO AI\n\nProfilo indicato:\n"${input}"\n\n▸ Percorsi coerenti suggeriti\n 1. Indirizzo tecnico-informatico (forte affinità con gli interessi)\n 2. Liceo scientifico opzione scienze applicate\n 3. Percorsi ITS/attività su coding e making\n\n▸ Competenze da valorizzare\n • Logica e problem solving\n • Creatività digitale\n\n▸ Suggerimento per il tutor\n Proponi un'esperienza laboratoriale (es. progetto di coding) per rafforzare la motivazione e l'esposizione orale.`;
+    case 1: return `ASSISTENTE SEGRETERIA — bozza di gestione\n\nIstanza ricevuta:\n"${input}"\n\n▸ Classificazione: certificati / attestazioni\n▸ Ufficio competente: Segreteria didattica\n▸ Bozza di risposta\n "Gentile richiedente, in riferimento alla Sua istanza, si comunica che il certificato richiesto sarà disponibile entro 3 giorni lavorativi presso la segreteria didattica, negli orari di apertura al pubblico. Cordiali saluti."\n▸ Adempimenti suggeriti: protocollazione · verifica dati anagrafici · firma del DSGA.\n\n(Bozza modificabile — la validazione resta dell'ufficio.)`;
+    case 7: return `PROTOCOLLO INTELLIGENTE — smistamento\n\nDocumento in ingresso:\n"${input}"\n\n▸ Tipologia: nota da Ente sovraordinato (USR)\n▸ Oggetto sintetico: aggiornamento graduatorie / supplenze\n▸ Fascicolo suggerito: "Personale — Graduatorie"\n▸ Ufficio assegnatario: Segreteria del personale\n▸ Priorità: media · Scadenza: da verificare nel testo\n▸ Azioni: protocollo in ingresso · notifica al DSGA · archiviazione nel fascicolo.`;
+    case 8: return `CHATBOT SCUOLA-FAMIGLIA — risposta\n\nDomanda:\n"${input}"\n\nRisposta automatica:\n "Le iscrizioni si effettuano online sul portale del Ministero nelle date indicate dalla circolare annuale. Servono: dati anagrafici dello studente e di un genitore, codice fiscale ed eventuale documentazione per esigenze particolari. Per assistenza la segreteria è disponibile negli orari di apertura al pubblico."\n\n(La risposta attinge alle circolari e alle FAQ d'istituto; i casi complessi vengono inoltrati all'ufficio.)`;
+    case 16: return `ASSISTENTE BANDI & PROGETTI — impostazione\n\nAvviso/progetto:\n"${input}"\n\n▸ Struttura proposta\n • Obiettivi e destinatari\n • Attività e cronoprogramma (12 mesi)\n • Piano dei costi con voci ammissibili\n • Indicatori di risultato e monitoraggio\n▸ Bozza budget (indicativa)\n • Attrezzature 60% · Formazione 25% · Gestione 15%\n▸ Verifica coerenza con l'avviso: requisiti soggettivi ✔ · massimali di spesa da controllare.\n\n(Bozza di supporto alla candidatura — da validare con il DSGA.)`;
+    case 21: return `ASSISTENTE PRIVACY & DPIA — checklist\n\nTrattamento/strumento:\n"${input}"\n\n▸ Base giuridica: esecuzione di un compito di interesse pubblico (art. 6 GDPR)\n▸ Categorie di dati: anagrafici studenti e famiglie (eventuali dati particolari da verificare)\n▸ Necessità di DPIA: consigliata (trattamento sistematico di dati di minori)\n▸ Misure minime: dati in UE · cifratura · minimizzazione · informativa alle famiglie · nomina responsabile del trattamento\n▸ Prossimi passi: compilare registro dei trattamenti · coinvolgere il DPO.\n\n(Guida operativa — non sostituisce la valutazione del DPO.)`;
+    case 18: return `GESTIONE SOSTITUZIONI — proposta\n\nSituazione:\n"${input}"\n\n▸ Proposta ottimale\n • 1ª ora → Prof. Rossi (disponibile, stessa area disciplinare)\n • 2ª ora → Prof. Verdi (ore a disposizione)\n • 3ª ora → recupero con compresenza\n▸ Criteri applicati: disponibilità · continuità didattica · equità nel carico\n▸ Note: nessun superamento del monte ore; aggiornare il registro e avvisare i docenti.\n\n(Proposta da confermare da parte dell'ufficio.)`;
+    default: return `Risultato generato dallo strumento per l'input fornito:\n\n"${input}"\n\n(Anteprima dimostrativa del funzionamento AI dello strumento.)`;
+  }
+}
+
+/* ====== Init ====== */
+document.getElementById('searchInput').addEventListener('input',e=>{searchText=e.target.value;renderGrid();});
+document.getElementById('sortSelect').addEventListener('change',e=>{sortMode=e.target.value;renderGrid();});
+document.getElementById('budgetSelect').addEventListener('change',e=>{budgetFilter=e.target.value;renderGrid();});
+renderChips(); renderGrid(); renderPlan(); applyProfile(); renderViewSwitch();
+
+/* Quota PN ancora libera nel banner */
+(function(){
+  const pct = Math.round(BUDGET_LIBERO/BUDGET*100);
+  const el = document.getElementById('scFree');
+  if(el) el.textContent = pct+'% · '+eur(BUDGET_LIBERO);
+})();
+
+/* deep-link: #gaia → intro, #catalogo → catalogo */
+if(location.hash==='#catalogo') goGaia();
+else if(location.hash==='#gaia') goGaiaIntro();
+</script>
+</body>
+</html>
